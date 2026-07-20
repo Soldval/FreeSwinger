@@ -20,8 +20,9 @@ Soldvalは「ソルドバル」と読みます。名前に深い意味はあり�
 ○○××
 
 ## 💭 設計・構想資料
-* [FreeSwinger 企画書はこちら（PDF）](./docs/FreeSwinger_企画書.pdf)
-* 構想資料はこちら
+開発前に作成した企画書や構想資料は、以下よりご覧いただけます。
+* [FreeSwinger 企画書はこちら（PDF）](./Documents/FreeSwinger_企画書.pdf)
+* [FreeSwinger 構想資料はこちら（Excel ダウンロード）](./Documents/FreeSwinger_構想資料.xlsx)
 
 ## 📜 制作意図
 ### 1. コンセプトとコア体験
