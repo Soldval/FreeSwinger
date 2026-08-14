@@ -4,8 +4,14 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// ゲームシーン全体を管理するクラス
+/// </summary>
 public class GameManager : MonoBehaviour
 {
+    [Header("ゲームシーンで流すBGM")]
+    [SerializeField] private AudioClip gameBGM;
+
     // ポーズウィンドウ(フォルダ)を登録
     [SerializeField] private GameObject PauseWindow;
 
@@ -14,7 +20,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+        // ゲームシーン開始時にゲームシーンBGMを再生させる
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayBGM(gameBGM);
+        }
     }
 
     void Update()

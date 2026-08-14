@@ -420,6 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770fda258380b70439047648adfda1fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  gameBGM: {fileID: 8300000, guid: a3828a92064103946ab3b0915dacda1d, type: 3}
   PauseWindow: {fileID: 487855938}
 --- !u!4 &356901352
 Transform:
