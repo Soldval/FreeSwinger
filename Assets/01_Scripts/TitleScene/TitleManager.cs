@@ -21,51 +21,28 @@ public class TitleManager : MonoBehaviour
 
     [Header("ランキングウィンドウ関連")]
     [SerializeField] private GameObject rankingWindow;      // ランキングウィンドウ
-    [SerializeField] private Button rankingCloseButton;     // ランキングウィンドウの閉じるボタン
-    [SerializeField] private GameObject rankingOpenButton;  // ランキングウィンドウを開くボタン
+    [SerializeField] private Button rankingCloseButton;     // ランキングウィンドウの「閉じる」ボタン
+    [SerializeField] private GameObject rankingOpenButton;  // ランキングウィンドウを「開く」ボタン
 
     [Header("システムウィンドウ関連")]
     [SerializeField] private GameObject systemWindow;      // システムウィンドウ
-    [SerializeField] private Button systemCloseButton;     // システムウィンドウの閉じるボタン
-    [SerializeField] private GameObject systemOpenButton;  // システムウィンドウを開くボタン
+    [SerializeField] private Button systemCloseButton;     // システムウィンドウの「閉じる」ボタン
+    [SerializeField] private GameObject systemOpenButton;  // システムウィンドウを「開く」ボタン
 
     // 前回選択オブジェクトの記憶
     private GameObject lastSelectedObject;
 
     void Start()
     {
-        // タイトルBGMの再生
-        if(AudioManager.instance != null)
-        {
-            AudioManager.instance.PlayBGM(titleBGM);
-        }
-
-        // 選択ボタンの設定(効果音は鳴らさない)
-        SetFocusWithoutSound(titleFirstSelectionButton);
+        AudioManager.PlayBGM(titleBGM);  // タイトルBGMを再生
+        // 選択ボタンの設定
+        lastSelectedObject = UIUtils.SetFocusWithoutSound(titleFirstSelectionButton);
     }
 
     void Update()
     {
-        // ------------------------------------------------------------
-        // ---- キーボードやゲームパッド操作によるボタン移動を監視 ----
-        // ------------------------------------------------------------
-        if(EventSystem.current != null)
-        {
-            GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
-            
-            // 選択中ボタンがあり、それが前回選択ボタンと異なっている場合。
-            if(currentSelected != null && currentSelected != lastSelectedObject)
-            {
-                // 初期化時以外は移動音を鳴らす
-                if(lastSelectedObject != null && AudioManager.instance != null)
-                {
-                    AudioManager.instance.PlaySEMove();
-                }
-
-                // 現在の選択ボタンを記憶させる
-                lastSelectedObject = currentSelected;
-            }
-        }
+        // キーボードやゲームパッド操作によるボタン移動を監視し移動音を鳴らす
+        UIUtils.HandleselectionChangeSE(ref lastSelectedObject);
     }
 
     #region スタートボタン, ウィンドウ表示・非表示処理 ----
@@ -73,78 +50,58 @@ public class TitleManager : MonoBehaviour
     // スタートボタン処理
     public void OnStartButtonPress()
     {
-        if(AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySESubmit();  // 決定音を鳴らす
-        }
+        AudioManager.PlaySESubmit();  // 決定音を鳴らす
 
         SceneManager.LoadScene("02_GameScene");
-        //Debug.Log("スタートボタンを押しました！");
     }
 
     // ランキングウィンドウ表示処理
     public void OpenRankingWindow()
     {
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySESubmit();  // 決定音を鳴らす
-        }
+        AudioManager.PlaySESubmit();  // 決定音を鳴らす
 
         SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
         rankingWindow.SetActive(true);
 
         if(rankingCloseButton != null)
         {
-            SetFocusWithoutSound(rankingCloseButton.gameObject);
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingCloseButton.gameObject);
         }
-        //Debug.Log("ランキングウィンドウを開きました！");
     }
 
     // ランキングウィンドウ非表示処理
     public void CloseRankingWindow()
     {
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySESubmit();  // 決定音を鳴らす
-        }
+        AudioManager.PlaySESubmit();  // 決定音を鳴らす
 
         SetTitleButtonsInteractable(true);  // タイトルメインボタン群の操作を有効化
         rankingWindow.SetActive(false);
 
-        SetFocusWithoutSound(rankingOpenButton);
-        //Debug.Log("ランキングウィンドウを閉じました！");
+        lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingOpenButton);
     }
 
     // システムウィンドウ表示処理
     public void OpenSystemWindow()
     {
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySESubmit();  // 決定音を鳴らす
-        }
+        AudioManager.PlaySESubmit();  // 決定音を鳴らす
 
         SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
         systemWindow.SetActive(true);
 
         if (systemCloseButton != null)
         {
-            SetFocusWithoutSound(systemCloseButton.gameObject);
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(systemCloseButton.gameObject);
         }
-        //Debug.Log("システムウィンドウを開きました！");
     }
 
     public void CloseSystemWindow()
     {
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySESubmit();  // 決定音を鳴らす
-        }
+        AudioManager.PlaySESubmit();  // 決定音を鳴らす
 
         SetTitleButtonsInteractable(true);  // タイトルメインボタン群の操作を有効化
         systemWindow.SetActive(false);
 
-        SetFocusWithoutSound(systemOpenButton);
-        //Debug.Log("システムウィンドウを閉じました！");
+        lastSelectedObject = UIUtils.SetFocusWithoutSound(systemOpenButton);
     }
 
     #endregion // スタートボタン, ウィンドウ表示・非表示処理 ----
@@ -165,22 +122,6 @@ public class TitleManager : MonoBehaviour
             {
                 btn.interactable = interactable;
             }
-        }
-    }
-    
-    /// <summary>
-    /// 選択したオブジェクトを選択状態にする(効果音は鳴らさない)
-    /// </summary>
-    /// <param name="target">選択状態にしたいオブジェクト(ボタン)</param>
-    private void SetFocusWithoutSound(GameObject target)
-    {
-        if(target != null && EventSystem.current != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);  // 現在の選択オブジェクトを空にする
-            EventSystem.current.SetSelectedGameObject(target);  // 選択したいオブジェクトを選択状態にする
-
-            // 選択ボタン記憶を更新させる(Update側で二重に効果音が鳴らないための防止)
-            lastSelectedObject = target;
         }
     }
 }

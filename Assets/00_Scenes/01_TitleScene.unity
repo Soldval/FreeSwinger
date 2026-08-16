@@ -954,8 +954,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   seAudioSource: {fileID: 237509751}
   bgmAudioSource: {fileID: 237509754}
-  seMove: {fileID: 8300000, guid: ce22a317854b1b043bbd97644f9cabd1, type: 3}
-  seSubmit: {fileID: 8300000, guid: b8df7f3db7e2ecd43b49e097205976e4, type: 3}
+  seButtonMove: {fileID: 8300000, guid: ce22a317854b1b043bbd97644f9cabd1, type: 3}
+  seButtonSubmit: {fileID: 8300000, guid: b8df7f3db7e2ecd43b49e097205976e4, type: 3}
 --- !u!4 &237509753
 Transform:
   m_ObjectHideFlags: 0
