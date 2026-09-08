@@ -2,7 +2,6 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -21,13 +20,13 @@ public class TitleManager : MonoBehaviour
 
     [Header("ランキングウィンドウ関連")]
     [SerializeField] private GameObject rankingWindow;      // ランキングウィンドウ
-    [SerializeField] private Button rankingCloseButton;     // ランキングウィンドウの「閉じる」ボタン
     [SerializeField] private GameObject rankingOpenButton;  // ランキングウィンドウを「開く」ボタン
+    [SerializeField] private GameObject rankingCloseButton;  // ランキングウィンドウの「閉じる」ボタン
 
     [Header("システムウィンドウ関連")]
     [SerializeField] private GameObject systemWindow;      // システムウィンドウ
-    [SerializeField] private Button systemCloseButton;     // システムウィンドウの「閉じる」ボタン
     [SerializeField] private GameObject systemOpenButton;  // システムウィンドウを「開く」ボタン
+    [SerializeField] private GameObject systemMasterSliderObject;  // システムウィンドウのマスター音量オブジェクト
 
     // 前回選択オブジェクトの記憶
     private GameObject lastSelectedObject;
@@ -47,61 +46,77 @@ public class TitleManager : MonoBehaviour
 
     #region スタートボタン, ウィンドウ表示・非表示処理 ----
 
-    // スタートボタン処理
+    /// <summary>
+    /// スタートボタン押下時の処理
+    /// </summary>
     public void OnStartButtonPress()
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
-
-        SceneManager.LoadScene("02_GameScene");
+        SceneManager.LoadScene("02_GameScene");  // ゲームシーンに移動
     }
 
-    // ランキングウィンドウ表示処理
+    /// <summary>
+    /// ランキングウィンドウを開く処理
+    /// </summary>
     public void OpenRankingWindow()
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
-
         SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
-        rankingWindow.SetActive(true);
+        rankingWindow.SetActive(true);  // ランキングウィンドウを表示させる
 
+        // 閉じるボタンを選択状態にする
         if(rankingCloseButton != null)
         {
-            lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingCloseButton.gameObject);
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingCloseButton);
         }
     }
 
-    // ランキングウィンドウ非表示処理
+    /// <summary>
+    /// ランキングウィンドウを閉じる処理
+    /// </summary>
     public void CloseRankingWindow()
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
-
         SetTitleButtonsInteractable(true);  // タイトルメインボタン群の操作を有効化
-        rankingWindow.SetActive(false);
+        rankingWindow.SetActive(false);  // ランキングウィンドウを非表示にする
 
-        lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingOpenButton);
-    }
-
-    // システムウィンドウ表示処理
-    public void OpenSystemWindow()
-    {
-        AudioManager.PlaySESubmit();  // 決定音を鳴らす
-
-        SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
-        systemWindow.SetActive(true);
-
-        if (systemCloseButton != null)
+        // ランキングボタンを選択状態にする
+        if(rankingOpenButton != null)
         {
-            lastSelectedObject = UIUtils.SetFocusWithoutSound(systemCloseButton.gameObject);
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingOpenButton);
         }
     }
 
+    /// <summary>
+    /// システムウィンドウを開く処理
+    /// </summary>
+    public void OpenSystemWindow()
+    {
+        AudioManager.PlaySESubmit();  // 決定音を鳴らす
+        SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
+        systemWindow.SetActive(true);  // システムウィンドウを表示させる
+
+        // マスター音量オブジェクトを選択状態にする
+        if (systemMasterSliderObject != null)
+        {
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(systemMasterSliderObject);
+        }
+    }
+
+    /// <summary>
+    /// システムウィンドウを閉じる処理
+    /// </summary>
     public void CloseSystemWindow()
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
-
         SetTitleButtonsInteractable(true);  // タイトルメインボタン群の操作を有効化
-        systemWindow.SetActive(false);
+        systemWindow.SetActive(false); // システムウィンドウを非表示にする
 
-        lastSelectedObject = UIUtils.SetFocusWithoutSound(systemOpenButton);
+        // システムボタンを選択状態にする
+        if(systemOpenButton != null)
+        {
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(systemOpenButton);
+        }
     }
 
     #endregion // スタートボタン, ウィンドウ表示・非表示処理 ----
@@ -112,7 +127,7 @@ public class TitleManager : MonoBehaviour
     /// <param name="interactable">true:操作可能 / false:操作不可能</param>
     private void SetTitleButtonsInteractable(bool interactable)
     {
-        // ボタンリストが空の場合、ここで処理をやめる。
+        // ガード節
         if (titleButtons == null) return;
 
         foreach(var btn in titleButtons)

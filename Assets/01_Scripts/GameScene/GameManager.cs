@@ -2,7 +2,6 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 /// <summary>
 /// ゲームシーン全体を管理するクラス
@@ -12,27 +11,36 @@ public class GameManager : MonoBehaviour
     [Header("ゲームシーンで流すBGM")]
     [SerializeField] private AudioClip gameBGM;
 
+    [Header("HUD関連")]
+    [SerializeField] private GameObject HUD;  // HUD(タイム, スコア, マップ)
+
     [Header("ポーズウィンドウ関連")]
     [SerializeField] private GameObject pauseWindow;  // ポーズウィンドウ
     [SerializeField] private GameObject pauseFirstSelectionButton;  // ポーズウィンドウ開始時に選択されるボタン
 
+    [Header("デバッグ用設定")]
+    [SerializeField] private bool isDebugMode = false;  // デバッグモード
+
     // 前回選択オブジェクトの記憶
     private GameObject lastSelectedObject;
 
-    // ポーズの状態(ゲームシーン開始時はOFF)
+    // ポーズ状態(ゲームシーン開始時はOFF)
     private bool isPaused = false;
 
     void Start()
     {
         AudioManager.PlayBGM(gameBGM);  // ゲームBGMを再生
+        SetHUDActive(true);  // HUDを表示させる
+        ResumeGame();  // ポーズウィンドウを非表示にする
     }
 
     void Update()
     {
-        // Zキーが押された場合、リザルトシーンに移動する。
-        if(Input.GetKeyDown(KeyCode.Z))
+        // デバッグモード時の処理
+        // Zキー押下でリザルトシーンに移動する
+        if(isDebugMode && Input.GetKeyDown(KeyCode.Z))
         {
-            SceneManager.LoadScene("03_ResultScene");
+            GoToResultScene();
         }
 
         // Escキーが押された場合
@@ -58,6 +66,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// リザルトシーンへ移動する処理
+    /// </summary>
+    public void GoToResultScene()
+    {
+        Time.timeScale = 1f;  // 一応時間を戻しておく
+        SetHUDActive(false);  // HUDを非表示にする
+        SceneManager.LoadScene("03_ResultScene");  // リザルトシーンへ移動
+    }
+
+    /// <summary>
+    /// HUDの表示/非表示を操作する処理
+    /// </summary>
+    /// <param name="isActive"></param>
+    public void SetHUDActive(bool isActive)
+    {
+        if(HUD != null)
+        {
+            HUD.SetActive(isActive);
+        }
+    }
+
     #region ポーズ関係の処理 ----
 
     /// <summary>
@@ -65,8 +95,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PauseGame()
     {
-        isPaused = true;
-        pauseWindow.SetActive(true);
+        isPaused = true;  // ポーズ状態をON
+        pauseWindow.SetActive(true);  // ポーズウィンドウを表示させる
         Time.timeScale = 0f;  // 時間を停止させる
     }
 
@@ -75,8 +105,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ResumeGame()
     {
-        isPaused = false;
-        pauseWindow.SetActive(false);
+        isPaused = false;  // ポーズ状態をOFF
+        pauseWindow.SetActive(false);  // ポーズウィンドウを非表示にする
         Time.timeScale = 1f;  // 時間を元のスピードに戻す
     }
 
@@ -87,7 +117,7 @@ public class GameManager : MonoBehaviour
     public void OnContinueButtonPress()
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
-        ResumeGame();
+        ResumeGame();  // ゲームシーンを再開させる
     }
 
     /// <summary>
@@ -98,7 +128,8 @@ public class GameManager : MonoBehaviour
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
         Time.timeScale = 1f;  // 時間を元のスピードに戻す
-        SceneManager.LoadScene("02_GameScene");
+        SetHUDActive(false);  // HUDを非表示にする
+        SceneManager.LoadScene("02_GameScene");  // ゲームシーンをリスタート
     }
 
     /// <summary>
@@ -109,7 +140,8 @@ public class GameManager : MonoBehaviour
     {
         AudioManager.PlaySESubmit();  // 決定音を鳴らす
         Time.timeScale = 1f;  // 時間を元のスピードに戻す
-        SceneManager.LoadScene("01_TitleScene");
+        SetHUDActive(false);  // HUDを非表示にする
+        SceneManager.LoadScene("01_TitleScene");  // タイトルシーンへ移動
     }
 
     #endregion // ポーズ関係の処理 ----

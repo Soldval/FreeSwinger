@@ -2,6 +2,9 @@
 
 using UnityEngine;
 
+/// <summary>
+/// プレイヤー操作に関係するクラス
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     // 移動スピード(インスペクターから調整可能)

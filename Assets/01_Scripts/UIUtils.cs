@@ -9,10 +9,10 @@ using UnityEngine.EventSystems;
 public static class UIUtils
 {
     /// <summary>
-    /// 選択したオブジェクトを選択状態にする(効果音は鳴らさない)
+    /// オブジェクトを選択状態にする(効果音は鳴らさない)
     /// </summary>
-    /// <param name="target">選択状態にしたいオブジェクト(ボタン)</param>
-    /// <returns>選択状態にしたいオブジェクト(ボタン)</returns>
+    /// <param name="target">選択状態にしたいオブジェクト</param>
+    /// <returns>選択状態にしたいオブジェクト GameObject</returns>
     public static GameObject SetFocusWithoutSound(GameObject target)
     {
         if (target != null && EventSystem.current != null)
@@ -21,15 +21,20 @@ public static class UIUtils
             EventSystem.current.SetSelectedGameObject(target);  // 選択したいオブジェクトを選択状態にする
         }
 
-        // 前回選択オブジェクト更新用にそのまま選択状態にしたいオブジェクト(ボタン)を返す
+        // 前回選択オブジェクト更新用にそのまま選択状態にしたいオブジェクトを返す
         // (二重に効果音が鳴らないための防止)
         return target;
     }
 
+    /// <summary>
+    /// ボタン選択切り替え時にSEを鳴らす処理
+    /// </summary>
+    /// <param name="lastSelected">前回選択オブジェクトの記憶</param>
     public static void HandleselectionChangeSE(ref GameObject lastSelected)
     {
         if (EventSystem.current != null)
         {
+            // 現在選択状態になっているボタンを取得する
             GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
 
             // 選択中ボタンがあり、それが前回選択ボタンと異なっている場合。
