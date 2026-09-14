@@ -16,7 +16,7 @@ public class GameScore : MonoBehaviour
 
     void Start()
     {
-        UpdateScoreUI();  // スコア表示を更新
+        UpdateScoreUI();
     }
 
     void Update()
@@ -40,8 +40,8 @@ public class GameScore : MonoBehaviour
     /// <param name="amount">加算する数値</param>
     public void AddScore(int amount)
     {
-        currentScore += amount;  // スコアの加算
-        UpdateScoreUI();  // スコア表示を更新
+        currentScore += amount;
+        UpdateScoreUI();
     }
 
     /// <summary>

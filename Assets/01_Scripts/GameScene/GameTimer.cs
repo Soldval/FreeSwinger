@@ -20,7 +20,7 @@ public class GameTimer : MonoBehaviour
     [Header("GameManagerを参照する")]
     [SerializeField] private GameManager gameManager;
 
-    private float currentTimer;  // 現在タイマー
+    private float currentTimer;
     private bool isTimerRunning = false;  // タイマー実行状態
 
     void Start()
@@ -33,12 +33,11 @@ public class GameTimer : MonoBehaviour
             txtTimeUp.gameObject.SetActive(false);
         }
 
-        isTimerRunning = true;  // タイマー実行状態をON
+        isTimerRunning = true;
     }
 
     void Update()
     {
-        // タイマー状態状態がOFFだったらここで遮る
         if (!isTimerRunning) return;
 
         // ポーズ中は自動的にカウントは止まる
@@ -48,12 +47,12 @@ public class GameTimer : MonoBehaviour
         // 現在タイマーが0になった場合の処理
         if(currentTimer <= 0f)
         {
-            currentTimer = 0f;  // 現在タイマーを0にする
-            isTimerRunning = false;  // タイマー実行状態をOFF
+            currentTimer = 0f;
+            isTimerRunning = false;
             StartCoroutine(OnTimeUpRoutine());  // コルーチンを開始
         }
 
-        UpdateTimerUI();  // タイマー表示を更新
+        UpdateTimerUI();
     }
 
     /// <summary>

@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
-    // 移動スピード(インスペクターから調整可能)
     [SerializeField] private float moveSpeed = 5.0f;
 
     private CharacterController controller;

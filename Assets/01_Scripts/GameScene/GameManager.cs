@@ -29,9 +29,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.PlayBGM(gameBGM);  // ゲームBGMを再生
-        SetHUDActive(true);  // HUDを表示させる
-        ResumeGame();  // ポーズウィンドウを非表示にする
+        AudioManager.PlayBGM(gameBGM);
+        SetHUDActive(true);
+        ResumeGame();  // ポーズを解除する
     }
 
     void Update()
@@ -71,9 +71,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GoToResultScene()
     {
-        Time.timeScale = 1f;  // 一応時間を戻しておく
-        SetHUDActive(false);  // HUDを非表示にする
-        SceneManager.LoadScene("03_ResultScene");  // リザルトシーンへ移動
+        Time.timeScale = 1f;
+        SetHUDActive(false);
+        SceneManager.LoadScene("03_ResultScene");
     }
 
     /// <summary>
@@ -95,9 +95,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void PauseGame()
     {
-        isPaused = true;  // ポーズ状態をON
-        pauseWindow.SetActive(true);  // ポーズウィンドウを表示させる
-        Time.timeScale = 0f;  // 時間を停止させる
+        isPaused = true;
+        pauseWindow.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     /// <summary>
@@ -105,9 +105,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ResumeGame()
     {
-        isPaused = false;  // ポーズ状態をOFF
-        pauseWindow.SetActive(false);  // ポーズウィンドウを非表示にする
-        Time.timeScale = 1f;  // 時間を元のスピードに戻す
+        isPaused = false;
+        pauseWindow.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     /// <summary>
@@ -116,8 +116,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnContinueButtonPress()
     {
-        AudioManager.PlaySESubmit();  // 決定音を鳴らす
-        ResumeGame();  // ゲームシーンを再開させる
+        AudioManager.PlaySESubmit();
+        ResumeGame();  // ポーズを解除する
     }
 
     /// <summary>
@@ -126,10 +126,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnRetryButtonPress()
     {
-        AudioManager.PlaySESubmit();  // 決定音を鳴らす
-        Time.timeScale = 1f;  // 時間を元のスピードに戻す
-        SetHUDActive(false);  // HUDを非表示にする
-        SceneManager.LoadScene("02_GameScene");  // ゲームシーンをリスタート
+        AudioManager.PlaySESubmit();
+        Time.timeScale = 1f;
+        SetHUDActive(false);
+        SceneManager.LoadScene("02_GameScene");
     }
 
     /// <summary>
@@ -138,10 +138,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void OnTitleMoveButtonPress()
     {
-        AudioManager.PlaySESubmit();  // 決定音を鳴らす
-        Time.timeScale = 1f;  // 時間を元のスピードに戻す
-        SetHUDActive(false);  // HUDを非表示にする
-        SceneManager.LoadScene("01_TitleScene");  // タイトルシーンへ移動
+        AudioManager.PlaySESubmit();
+        Time.timeScale = 1f;
+        SetHUDActive(false);
+        SceneManager.LoadScene("01_TitleScene");
     }
 
     #endregion // ポーズ関係の処理 ----

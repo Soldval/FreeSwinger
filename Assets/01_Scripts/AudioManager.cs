@@ -78,10 +78,8 @@ public class AudioManager : MonoBehaviour
     /// <param name="clip">再生する効果音データ</param>
     private void PlaySE(AudioClip clip)
     {
-        // 効果音データが空ではないかつスピーカーがセットされている場合
         if (clip != null && seAudioSource != null)
         {
-            // ワンショットで効果音を鳴らす
             seAudioSource.PlayOneShot(clip);
         }
     }
@@ -96,17 +94,16 @@ public class AudioManager : MonoBehaviour
     /// <param name="bgm">再生したいBGMデータ</param>
     public static void PlayBGM(AudioClip bgm)
     {
-        // ガード節
         // AudioManagerのinstance, 再生したいBGMデータ, BGM用スピーカーいずれかが空の場合を回避
         if (instance == null || bgm == null || instance.bgmAudioSource == null) return;
 
         // すでに同じ曲が流れている場合、そのまま流す(無駄な途切れ防止)
         if (instance.bgmAudioSource.clip == bgm && instance.bgmAudioSource.isPlaying) return;
 
-        instance.bgmAudioSource.clip = bgm;  // BGMをセット
+        instance.bgmAudioSource.clip = bgm;
         instance.bgmAudioSource.time = 0f;  // BGMを始めから流す
-        instance.bgmAudioSource.loop = true;  // ループON
-        instance.bgmAudioSource.Play();  // BGMを再生する
+        instance.bgmAudioSource.loop = true;
+        instance.bgmAudioSource.Play();
     }
 
     /// <summary>
@@ -117,7 +114,7 @@ public class AudioManager : MonoBehaviour
         // AudioManagerのinstanceがありBGM用スピーカーがある場合
         if (instance != null && instance.bgmAudioSource != null)
         {
-            instance.bgmAudioSource.Stop();  // BGMを停止する
+            instance.bgmAudioSource.Stop();
             instance.bgmAudioSource.clip = null;  // 割当BGMデータをクリア
         }
     }
