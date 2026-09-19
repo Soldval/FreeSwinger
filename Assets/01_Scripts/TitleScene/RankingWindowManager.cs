@@ -95,7 +95,6 @@ public class RankingWindowManager : MonoBehaviour
     /// <param name="type">成績種類</param>
     private void UpdateGradeImage(Image targetImage, GradeType type)
     {
-        // ガード節
         if (targetImage == null) return;
 
         // 成績種類に対応した画像を見つけてくる
@@ -122,7 +121,6 @@ public class RankingWindowManager : MonoBehaviour
     /// <returns>対応する画像データ Sprite</returns>
     private Sprite GetGradeSprite(GradeType type)
     {
-        // ガード節
         if (gradeImageDates == null) return clearSprite;
 
         // 成績種類に応じた画像データを返す
@@ -146,7 +144,6 @@ public class RankingWindowManager : MonoBehaviour
     /// <param name="newGrades">更新用の成績(配列)</param>
     public void SetGrades(GradeType[] newGrades)
     {
-        // ガード節
         if (newGrades == null || newGrades.Length != grades.Length) return;
 
         // 各成績を更新する
@@ -155,7 +152,7 @@ public class RankingWindowManager : MonoBehaviour
             grades[i] = newGrades[i];
         }
 
-        UpdateRankingUI();  // ランキングウィンドウのUI全体を更新する
+        UpdateRankingUI();
     }
 
     /// <summary>
@@ -164,7 +161,6 @@ public class RankingWindowManager : MonoBehaviour
     /// <param name="newScores">更新用のスコア(配列)</param>
     public void SetScores(int[] newScores)
     {
-        // ガード節
         if (newScores == null || newScores.Length != scores.Length) return;
 
         // 各スコア値を更新する
@@ -173,7 +169,7 @@ public class RankingWindowManager : MonoBehaviour
             scores[i] = newScores[i];
         }
 
-        UpdateRankingUI();  // ランキングウィンドウのUI全体を更新する
+        UpdateRankingUI();
     }
 
     /// <summary>
@@ -182,7 +178,6 @@ public class RankingWindowManager : MonoBehaviour
     /// <param name="newDates">更新用の各日付(配列)</param>
     public void SetDates(string[] newDates)
     {
-        // ガード節
         if (newDates == null || newDates.Length != dates.Length) return;
 
         // 各日付を更新する
@@ -191,7 +186,7 @@ public class RankingWindowManager : MonoBehaviour
             dates[i] = newDates[i];
         }
 
-        UpdateRankingUI();  // ランキングウィンドウのUI全体を更新する
+        UpdateRankingUI();
     }
 
     /// <summary>
@@ -229,7 +224,7 @@ public class RankingWindowManager : MonoBehaviour
             }
         }
 
-        UpdateRankingUI();  // ランキングウィンドウのUI全体を更新する
+        UpdateRankingUI();
     }
 
     #endregion // 一括更新用の処理まとめ

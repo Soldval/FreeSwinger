@@ -47,8 +47,8 @@ public class SoundVolumeManager : MonoBehaviour
     /// <param name="sliderValue">スライダー値</param>
     public void SetMasterVolume(float sliderValue)
     {
-        AudioManager.PlaySESlider();  // スライダー操作音を鳴らす
-        SetVolumeInternal(MASTER_PARAM, sliderValue);  // スライダー値からマスター音量を変更する
+        AudioManager.PlaySESlider();
+        SetVolumeInternal(MASTER_PARAM, sliderValue);
     }
 
     /// <summary>
@@ -57,8 +57,8 @@ public class SoundVolumeManager : MonoBehaviour
     /// <param name="sliderValue">スライダー値</param>
     public void SetBGMVolume(float sliderValue)
     {
-        AudioManager.PlaySESlider();  // スライダー操作音を鳴らす
-        SetVolumeInternal(BGM_PARAM, sliderValue);  // スライダー値からBGM音量を変更する
+        AudioManager.PlaySESlider();
+        SetVolumeInternal(BGM_PARAM, sliderValue);
     }
 
     /// <summary>
@@ -67,8 +67,8 @@ public class SoundVolumeManager : MonoBehaviour
     /// <param name="sliderValue">スライダー値</param>
     public void SetSEVolume(float sliderValue)
     {
-        AudioManager.PlaySESlider();  // スライダー操作音を鳴らす
-        SetVolumeInternal(SE_PARAM, sliderValue);  // スライダー値からSE音量を変更する
+        AudioManager.PlaySESlider();
+        SetVolumeInternal(SE_PARAM, sliderValue);
     }
 
     /// <summary>

@@ -34,9 +34,9 @@ public class ResultManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.StopBGM();  // BGMを停止
+        AudioManager.StopBGM();
 
-        int finalScore;  // 最終スコア
+        int finalScore;
 
         if(!isDebugMode)
         {
@@ -141,7 +141,6 @@ public class ResultManager : MonoBehaviour
     /// <returns>対応する画像データ Sprite</returns>
     private Sprite GetSpriteByGradeType(GradeType type)
     {
-        // ガード節
         if (type == GradeType.None || gradeImageDatas == null) return clearSprite;
 
         // 成績種類に応じた画像データを返す
@@ -167,8 +166,8 @@ public class ResultManager : MonoBehaviour
     /// </summary>
     public void OnOneMoreTimeButtonPress()
     {
-        AudioManager.PlaySESubmit();  // 決定音を鳴らす
-        SceneManager.LoadScene("02_GameScene");  // ゲームシーンへ移動
+        AudioManager.PlaySESubmit();
+        SceneManager.LoadScene("02_GameScene");
     }
 
     /// <summary>
@@ -177,8 +176,8 @@ public class ResultManager : MonoBehaviour
     /// </summary>
     public void OnTitleMoveButtonPress()
     {
-        AudioManager.PlaySESubmit();  // 決定音を鳴らす
-        SceneManager.LoadScene("01_TitleScene");  // タイトルシーンへ移動
+        AudioManager.PlaySESubmit();
+        SceneManager.LoadScene("01_TitleScene");
     }
 
     #endregion // 各ボタンの処理 ----
