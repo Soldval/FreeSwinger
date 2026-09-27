@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
+/// <summary>
+/// フォーカス状態のUIのOutlineをDOTweenで点滅させるクラス
+/// </summary>
 [RequireComponent(typeof(Outline))]
 public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
 {
@@ -14,6 +17,7 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
     [SerializeField] private float duration = 1.5f;
     [SerializeField] private float minAlpha = 0.1f;
 
+    // 内部変数
     private Outline outline;
     private Tween pulseTween;
     private bool isPulsing = false;
@@ -21,8 +25,13 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
     void Awake()
     {
         outline = GetComponent<Outline>();
-        if (outline != null) outline.enabled = false;
 
+        if (outline != null)
+        {
+            outline.enabled = false;
+        }
+
+        // 監視対象オブジェクトが空の場合、子オブジェクトを自動取得する。
         if(targetSelectable == null)
         {
             targetSelectable = GetComponentInChildren<Selectable>();
@@ -45,6 +54,9 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// outlineの点滅アニメーションを開始する処理
+    /// </summary>
     private void StartPulse()
     {
         if (outline == null) return;
@@ -63,6 +75,9 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
             .SetLoops(-1, LoopType.Yoyo);
     }
 
+    /// <summary>
+    /// outlineの点滅アニメーションを停止し非表示にする処理
+    /// </summary>
     private void StopPulse()
     {
         isPulsing = false;
@@ -70,6 +85,9 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
         if (outline != null) outline.enabled = false;
     }
 
+    /// <summary>
+    /// 非アクティブ時にアニメーションを破棄・安全停止させる処理
+    /// </summary>
     void OnDisable()
     {
         StopPulse();

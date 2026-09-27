@@ -9,9 +9,6 @@ using TMPro;
 /// </summary>
 public class RankingWindowManager : MonoBehaviour
 {
-    [Header("各スコア表示用UI")]
-    [SerializeField] private TextMeshProUGUI[] txtScores = new TextMeshProUGUI[5];
-
     [Header("各成績画像のデータ設定")]
     [SerializeField] private GradeImageData[] gradeImageDates;
 
@@ -32,11 +29,14 @@ public class RankingWindowManager : MonoBehaviour
         GradeType.None
     };
 
-    [Header("各日付表示用UI")]
-    [SerializeField] private TextMeshProUGUI[] txtDates = new TextMeshProUGUI[5];
+    [Header("各スコア表示用UI")]
+    [SerializeField] private TextMeshProUGUI[] txtScores = new TextMeshProUGUI[5];
 
     [Header("各スコア値(初期値:-1)")]
     [SerializeField] private int[] scores = new int[5] { -1, -1, -1, -1, -1 };
+
+    [Header("各日付表示用UI")]
+    [SerializeField] private TextMeshProUGUI[] txtDates = new TextMeshProUGUI[5];
 
     [Header("各日付データ(初期値:空文字)")]
     [SerializeField] private string[] dates = new string[5] { "", "", "", "", "" };
@@ -88,8 +88,10 @@ public class RankingWindowManager : MonoBehaviour
         }
     }
 
+    #region 画像関係処理まとめ
+
     /// <summary>
-    /// 指定したUI_Imageに成績種類に対応する画像データをセットする処理
+    /// UI_Imageの成績種類に対応する画像データをセットする処理
     /// </summary>
     /// <param name="targetImage">指定した成績画像</param>
     /// <param name="type">成績種類</param>
@@ -135,6 +137,8 @@ public class RankingWindowManager : MonoBehaviour
         // 見つからない場合は透明画像を返す
         return clearSprite;
     }
+
+    #endregion // 画像関係処理まとめ
 
     #region 一括更新用の処理まとめ ----
 

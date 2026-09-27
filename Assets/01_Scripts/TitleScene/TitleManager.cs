@@ -15,11 +15,11 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private AudioClip titleBGM;
 
     [Header("PRESS ANY BUTTON 関連")]
-    [SerializeField] private CanvasGroup pressAnyKeyCanvasGroup;
-    [SerializeField] private CanvasGroup mainButtonsCanvasGroup;
-    [SerializeField] private float pressKeyPulseDuration = 1.0f;  // 「PRESS ANY BUTTON」の点滅時間
-    [SerializeField] private float fadeOutDuration = 1.0f;  // 「PRESS ANY BUTTON」が消える時間
-    [SerializeField] private float delayToButtons = 1.0f;  // 「PRESS ANY BUTTON」が消えてからスタートボタンなどが出るまでの待ち時間
+    [SerializeField] private CanvasGroup pressAnyKeyCanvasGroup;  // PRESS ANY BUTTON のCanvasGroup
+    [SerializeField] private CanvasGroup mainButtonsCanvasGroup;  // メインボタン群のCanvasGroup
+    [SerializeField] private float pressKeyPulseDuration = 1.0f;  // PRESS ANY BUTTON の点滅時間
+    [SerializeField] private float fadeOutDuration = 1.0f;  // PRESS ANY BUTTON が消える時間
+    [SerializeField] private float delayToButtons = 1.0f;  // PRESS ANY BUTTON 消滅→メインボタン群出現 までの待ち時間
 
     [Header("タイトルシーン開始時に選択されるボタン")]
     [SerializeField] private GameObject titleFirstSelectionButton;
@@ -28,17 +28,17 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private Selectable[] titleButtons;  // スタートボタン, ランキングボタン, システムボタン
 
     [Header("ランキングウィンドウ関連")]
-    [SerializeField] private GameObject rankingWindow;      // ランキングウィンドウ
-    [SerializeField] private GameObject rankingOpenButton;  // ランキングウィンドウを「開く」ボタン
-    [SerializeField] private GameObject rankingCloseButton;  // ランキングウィンドウの「閉じる」ボタン
+    [SerializeField] private GameObject rankingWindow;
+    [SerializeField] private GameObject rankingOpenButton;
+    [SerializeField] private GameObject rankingCloseButton;
 
     [Header("システムウィンドウ関連")]
-    [SerializeField] private GameObject systemWindow;      // システムウィンドウ
-    [SerializeField] private GameObject systemOpenButton;  // システムウィンドウを「開く」ボタン
-    [SerializeField] private GameObject systemWindowFirstSelectionObject;  // システムウィンドウの始めに選択されるオブジェクト
+    [SerializeField] private GameObject systemWindow;
+    [SerializeField] private GameObject systemOpenButton;
+    [SerializeField] private GameObject systemWindowFirstSelectionObject;
 
-    // 内部変数リスト
-    private GameObject lastSelectedObject;  // 前回選択オブジェクトの記憶
+    // 内部変数
+    private GameObject lastSelectedObject;
     private Tween pressKeyPulseTween;
     private bool isKeyPressed = false;
 
@@ -54,7 +54,7 @@ public class TitleManager : MonoBehaviour
             mainButtonsCanvasGroup.blocksRaycasts = false;
         }
 
-        // 「PRESS ANY BUTTON」の点滅を開始
+        // PRESS ANY BUTTON の点滅を開始
         if(pressAnyKeyCanvasGroup != null)
         {
             pressAnyKeyCanvasGroup.alpha = 1.0f;
@@ -62,14 +62,11 @@ public class TitleManager : MonoBehaviour
                 .SetEase(Ease.InOutSine)
                 .SetLoops(-1, LoopType.Yoyo);
         }
-
-        // 選択ボタンの設定
-        //lastSelectedObject = UIUtils.SetFocusWithoutSound(titleFirstSelectionButton);
     }
 
     void Update()
     {
-        // 「PRESS ANY BUTTON」の入力待ち
+        // PRESS ANY BUTTON の入力待ち
         if(!isKeyPressed)
         {
             if(Input.anyKeyDown)
@@ -84,21 +81,27 @@ public class TitleManager : MonoBehaviour
         UIUtils.HandleselectionChangeSE(ref lastSelectedObject);
     }
 
+    #region PRESS ANY BUTTON 関係の処理 ----
+
+    /// <summary>
+    /// PRESS ANY BUTTON 押下後の演出シーケンスを実行する処理
+    /// </summary>
+    /// <returns>演出用の待機時間 IEnumerator</returns>
     private IEnumerator SequencePressAnyKey()
     {
-        AudioManager.PlaySESubmit();
+        AudioManager.PlaySEPressAnyButton();
 
-        // 「PRESS ANY BUTTON」の点滅解除し1秒かけて消滅させる
+        // PRESS ANY BUTTON の点滅解除し設定時間かけてフェードアウトさせる
         pressKeyPulseTween?.Kill();
         if(pressAnyKeyCanvasGroup != null)
         {
             pressAnyKeyCanvasGroup.DOFade(0f, fadeOutDuration);
         }
 
-        // 1秒間待機
+        // PRESS ANY BUTTON のフェードアウトが終わるまでの待機時間
         yield return new WaitForSeconds(fadeOutDuration);
 
-        // 更に1秒間待機
+        // メインボタン群が出るまでの待機時間
         yield return new WaitForSeconds(delayToButtons);
 
         // メインボタン群を操作可能＆表示させる
@@ -113,10 +116,15 @@ public class TitleManager : MonoBehaviour
         lastSelectedObject = UIUtils.SetFocusWithoutSound(titleFirstSelectionButton);
     }
 
+    /// <summary>
+    /// このオブジェクトが非アクティブ化された場合、Tweenを停止・破棄する処理。
+    /// </summary>
     void OnDisable()
     {
         pressKeyPulseTween?.Kill();
     }
+
+    #endregion // PRESS ANY BUTTON 関係の処理 ----
 
     #region スタートボタン, ウィンドウ表示・非表示処理 ----
 
@@ -126,7 +134,7 @@ public class TitleManager : MonoBehaviour
     public void OnStartButtonPress()
     {
         AudioManager.PlaySESubmit();
-        SceneManager.LoadScene("02_GameScene");
+        SceneBridge.LoadSceneWithLoading("02_GameScene");
     }
 
     /// <summary>
@@ -135,13 +143,18 @@ public class TitleManager : MonoBehaviour
     public void OpenRankingWindow()
     {
         AudioManager.PlaySESubmit();
-        SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
+        SetTitleButtonsInteractable(false);
         rankingWindow.SetActive(true);
 
         // 閉じるボタンを選択状態にする
-        if(rankingCloseButton != null)
+        if (rankingCloseButton != null)
         {
             lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingCloseButton);
+        }
+        else if(rankingWindow != null)
+        {
+            // フォールバック
+            lastSelectedObject = UIUtils.SetFocusWithoutSound(rankingWindow);
         }
     }
 
@@ -151,7 +164,7 @@ public class TitleManager : MonoBehaviour
     public void CloseRankingWindow()
     {
         AudioManager.PlaySESubmit();
-        SetTitleButtonsInteractable(true);  // タイトルメインボタン群の操作を有効化
+        SetTitleButtonsInteractable(true);
         rankingWindow.SetActive(false);
 
         // ランキングボタンを選択状態にする
@@ -167,7 +180,7 @@ public class TitleManager : MonoBehaviour
     public void OpenSystemWindow()
     {
         AudioManager.PlaySESubmit();
-        SetTitleButtonsInteractable(false);  // タイトルメインボタン群の操作を無効化
+        SetTitleButtonsInteractable(false);
         systemWindow.SetActive(true);
 
         // マスター音量のオブジェクトを選択状態にする
@@ -188,7 +201,7 @@ public class TitleManager : MonoBehaviour
     public void CloseSystemWindow()
     {
         AudioManager.PlaySESubmit();
-        SetTitleButtonsInteractable(true);  // タイトルメインボタン群の操作を有効化
+        SetTitleButtonsInteractable(true);
         systemWindow.SetActive(false);
 
         // システムボタンを選択状態にする
@@ -201,7 +214,7 @@ public class TitleManager : MonoBehaviour
     #endregion // スタートボタン, ウィンドウ表示・非表示処理 ----
 
     /// <summary>
-    /// タイトルのメインボタン群の操作可能状態(有効/無効)を一括切り替えする
+    /// タイトルのメインボタン群の操作可能状態(有効/無効)を一括切り替えする処理
     /// </summary>
     /// <param name="interactable">true:操作可能 / false:操作不可能</param>
     private void SetTitleButtonsInteractable(bool interactable)
@@ -210,7 +223,6 @@ public class TitleManager : MonoBehaviour
 
         foreach(var btn in titleButtons)
         {
-            // ボタンが空でない場合、ボタンの操作可能状態を切り替える。
             if(btn != null)
             {
                 btn.interactable = interactable;

@@ -167,7 +167,7 @@ public class ResultManager : MonoBehaviour
     public void OnOneMoreTimeButtonPress()
     {
         AudioManager.PlaySESubmit();
-        SceneManager.LoadScene("02_GameScene");
+        SceneBridge.LoadSceneWithLoading("02_GameScene");
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ public class ResultManager : MonoBehaviour
     public void OnTitleMoveButtonPress()
     {
         AudioManager.PlaySESubmit();
-        SceneManager.LoadScene("01_TitleScene");
+        SceneBridge.LoadSceneWithLoading("01_TitleScene");
     }
 
     #endregion // 各ボタンの処理 ----

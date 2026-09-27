@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pauseFirstSelectionButton;  // ポーズウィンドウ開始時に選択されるボタン
 
     [Header("デバッグ用設定")]
-    [SerializeField] private bool isDebugMode = false;  // デバッグモード
+    [SerializeField] private bool isDebugMode = true;  // デバッグモード
 
     // 前回選択オブジェクトの記憶
     private GameObject lastSelectedObject;
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         AudioManager.PlaySESubmit();
         Time.timeScale = 1f;
         SetHUDActive(false);
-        SceneManager.LoadScene("02_GameScene");
+        SceneBridge.LoadSceneWithLoading("02_GameScene");
     }
 
     /// <summary>
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
         AudioManager.PlaySESubmit();
         Time.timeScale = 1f;
         SetHUDActive(false);
-        SceneManager.LoadScene("01_TitleScene");
+        SceneBridge.LoadSceneWithLoading("01_TitleScene");
     }
 
     #endregion // ポーズ関係の処理 ----
