@@ -1,5 +1,6 @@
 // AudioManager.cs
 
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -14,11 +15,23 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource seAudioSource;  // SE用スピーカー
     [SerializeField] private AudioSource bgmAudioSource;  // BGM用スピーカー
 
-    [Header("UI効果音素材")]
-    [SerializeField] private AudioClip sePressAnyButton;  // PRESS ANY BUTTON 効果音
+    [Header("UI効果音素材(共通)")]
+    
     [SerializeField] private AudioClip seButtonMove;  // ボタン移動音
     [SerializeField] private AudioClip seButtonSubmit;  // ボタン決定音
     [SerializeField] private AudioClip seSliderMove; // スライダー操作音
+
+    [Header("UI効果音素材(タイトルシーン)")]
+    [SerializeField] private AudioClip sePressAnyButton;  // PRESS ANY BUTTON 効果音
+
+    [Header("UI効果音素材(ゲームシーン)")]
+    [SerializeField] private AudioClip seLeftSwing;  // 左スイング効果音
+
+    [Header("UI効果音素材(リザルトシーン)")]
+    [SerializeField] private AudioClip seCountUp;  // カウントアップ効果音
+    [SerializeField] private AudioClip seGradeAppear;  // 成績表示効果音
+    [SerializeField] private AudioClip seCheer;  // 歓声効果音
+    [SerializeField] private AudioClip seApplause;  // 拍手効果音
 
     private void Awake()
     {
@@ -35,17 +48,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    #region SE処理まとめ ----
-
-    /// <summary>
-    /// PRESS ANY BUTTON 効果音を鳴らす処理
-    /// </summary>
-    public static void PlaySEPressAnyButton()
-    {
-        if (instance == null) return;
-        
-        instance.PlaySE(instance.sePressAnyButton);
-    }
+    #region 共通SE処理まとめ ----
 
     /// <summary>
     /// ボタン決定音を鳴らす処理
@@ -77,6 +80,82 @@ public class AudioManager : MonoBehaviour
         instance.PlaySE(instance.seSliderMove);
     }
 
+    #endregion // 共通SE処理まとめ
+
+    #region タイトルシーンSE処理まとめ ----
+
+    /// <summary>
+    /// PRESS ANY BUTTON 効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEPressAnyButton()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.sePressAnyButton);
+    }
+
+    #endregion // タイトルシーンSE処理まとめ ----
+
+    #region ゲームシーンSE処理まとめ ----
+
+    /// <summary>
+    /// 左スイング効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySELeftSwing()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seLeftSwing);
+    }
+
+    #endregion // ゲームシーンSE処理まとめ ----
+
+    #region リザルトシーンSE処理まとめ ----
+
+    /// <summary>
+    /// カウントアップ効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySECountUp()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seCountUp);
+    }
+
+    /// <summary>
+    /// 成績表示効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEGradeAppear()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seGradeAppear);
+    }
+
+    /// <summary>
+    /// 歓声効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySECheer()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seCheer);
+    }
+
+    /// <summary>
+    /// 拍手効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEApplause()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seApplause);
+    }
+
+    #endregion // リザルトシーンSE処理まとめ ----
+
+    #region その他SE処理まとめ ----
+
     /// <summary>
     /// 効果音再生の共通処理(ワンショット)
     /// </summary>
@@ -88,7 +167,7 @@ public class AudioManager : MonoBehaviour
         seAudioSource.PlayOneShot(clip);
     }
 
-    #endregion // SE処理まとめ
+    #endregion // その他SE処理まとめ ----
 
     #region BGM処理まとめ ----
 
@@ -99,9 +178,6 @@ public class AudioManager : MonoBehaviour
     public static void PlayBGM(AudioClip bgm)
     {
         if (instance == null || bgm == null || instance.bgmAudioSource == null) return;
-
-        // すでに同じ曲が流れている場合、そのまま流す(無駄な途切れ防止)
-        // if (instance.bgmAudioSource.clip == bgm && instance.bgmAudioSource.isPlaying) return;
 
         instance.bgmAudioSource.clip = bgm;
         instance.bgmAudioSource.time = 0f;  // BGMを始めから流す

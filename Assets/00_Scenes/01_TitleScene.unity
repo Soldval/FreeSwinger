@@ -1944,10 +1944,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   seAudioSource: {fileID: 237509751}
   bgmAudioSource: {fileID: 237509754}
-  sePressAnyButton: {fileID: 8300000, guid: bcbfa0b9cedbaa34ca793218d5c16c44, type: 3}
   seButtonMove: {fileID: 8300000, guid: ce22a317854b1b043bbd97644f9cabd1, type: 3}
   seButtonSubmit: {fileID: 8300000, guid: b8df7f3db7e2ecd43b49e097205976e4, type: 3}
   seSliderMove: {fileID: 8300000, guid: 9ffcc5c37c1baee43b6390cb34e03ec5, type: 3}
+  sePressAnyButton: {fileID: 8300000, guid: bcbfa0b9cedbaa34ca793218d5c16c44, type: 3}
+  seLeftSwing: {fileID: 8300000, guid: 9ebaee24d7732ed4090166d3aeebd620, type: 3}
+  seCountUp: {fileID: 8300000, guid: 796855d2b7e1dce4bb7b89868ac9fff2, type: 3}
+  seGradeAppear: {fileID: 8300000, guid: 7de5bc5679a918b4a906ea75c95728e0, type: 3}
+  seCheer: {fileID: 8300000, guid: 28de065bfce670e4b8d19dc7e00802ca, type: 3}
+  seApplause: {fileID: 8300000, guid: 5a1e4d70d2f6b5c45973deb8808546d7, type: 3}
 --- !u!4 &237509753
 Transform:
   m_ObjectHideFlags: 0

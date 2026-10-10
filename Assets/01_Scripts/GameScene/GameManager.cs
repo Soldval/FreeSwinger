@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     [Header("HUD関連")]
     [SerializeField] private GameObject HUD;  // HUD(タイム, スコア, マップ)
 
+    [Header("スコア関連")]
+    [SerializeField] private GameScore gameScore;  // スコア管理クラスを参照
+
     [Header("ポーズウィンドウ関連")]
     [SerializeField] private GameObject pauseWindow;  // ポーズウィンドウ
     [SerializeField] private GameObject pauseFirstSelectionButton;  // ポーズウィンドウ開始時に選択されるボタン
@@ -73,6 +76,19 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SetHUDActive(false);
+
+        // 現在スコアをPlayerPrefsに保存
+        if(gameScore != null)
+        {
+            int currentScore = gameScore.GetCurrentScore();
+            PlayerPrefs.SetInt("FINAL_SCORE", currentScore);
+            PlayerPrefs.Save();  // 確実に書き込む
+        }
+        else
+        {
+            Debug.LogWarning("gameScoreがアタッチされてないため、スコア保存できませんでした。");
+        }
+
         SceneManager.LoadScene("03_ResultScene");
     }
 

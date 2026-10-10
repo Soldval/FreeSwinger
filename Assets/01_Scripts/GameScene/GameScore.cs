@@ -8,11 +8,27 @@ using TMPro;
 /// </summary>
 public class GameScore : MonoBehaviour
 {
+    // 他スクリプトからアクセス可能にするインスタンス
+    public static GameScore Instance;
+
     [Header("参照するUI")]
     [SerializeField] private TextMeshProUGUI txtScore;
 
     [Header("スコア設定")]
     [SerializeField] private int currentScore = 0;
+
+    void Awake()
+    {
+        // インスタンス設定(シングルトン)
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -37,7 +53,7 @@ public class GameScore : MonoBehaviour
     /// <summary>
     /// スコアの加算と表示更新する処理
     /// </summary>
-    /// <param name="amount">加算する数値</param>
+    /// <param name="amount">加算する値</param>
     public void AddScore(int amount)
     {
         currentScore += amount;
@@ -58,7 +74,6 @@ public class GameScore : MonoBehaviour
     /// </summary>
     private void UpdateScoreUI()
     {
-        // ガード節
         if (txtScore == null) return;
 
         // {0:N0}は3桁区切りのカンマ表示になる
