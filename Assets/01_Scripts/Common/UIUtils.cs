@@ -4,36 +4,35 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// UI操作に関連する共通処理をまとめたクラス
+/// UI操作に関連する共通処理クラス
 /// </summary>
 public static class UIUtils
 {
     /// <summary>
-    /// オブジェクトを選択状態にする(効果音は鳴らさない)
+    /// オブジェクトをフォーカスにする(効果音は鳴らさない)
     /// </summary>
-    /// <param name="target">選択状態にしたいオブジェクト</param>
-    /// <returns>選択状態にしたいオブジェクト GameObject</returns>
+    /// <param name="target">フォーカスにするオブジェクト</param>
+    /// <returns>フォーカスにするオブジェクト GameObject</returns>
     public static GameObject SetFocusWithoutSound(GameObject target)
     {
         if (target == null || EventSystem.current == null) return null;
 
         EventSystem.current.SetSelectedGameObject(null);  // 現在の選択オブジェクトを空にする
-        EventSystem.current.SetSelectedGameObject(target);  // 選択したいオブジェクトを選択状態にする
+        EventSystem.current.SetSelectedGameObject(target);  // 選んだオブジェクトをフォーカスにする
 
-        // 前回選択オブジェクト更新用にそのまま選択状態にしたいオブジェクトを返す
-        // (二重に効果音が鳴らないための防止)
+        // 前回選択オブジェクト更新用として選択状態にしたオブジェクトを返す
         return target;
     }
 
     /// <summary>
-    /// ボタン選択切り替え時にSEを鳴らす処理
+    /// ボタン選択切替時にSEを鳴らす処理
     /// </summary>
     /// <param name="lastSelected">前回選択オブジェクトの記憶</param>
     public static void HandleselectionChangeSE(ref GameObject lastSelected)
     {
         if (EventSystem.current == null) return;
         
-        // 現在選択状態になっているボタンを取得する
+        // 現在フォーカスになっているボタンを取得する
         GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
 
         // 現在選択中が無い、もしくは前回選択と同じ場合は処理を終了。

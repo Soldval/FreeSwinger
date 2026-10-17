@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using DG.Tweening;
-using System;
 
 /// <summary>
 /// ロードシーン全体を管理するクラス
@@ -14,11 +13,11 @@ using System;
 public class LoadingManager : MonoBehaviour
 {
     [Header("参照するUI一覧")]
-    [SerializeField] private Slider progressBar;  // 進捗バー
-    [SerializeField] private TextMeshProUGUI txtPercent;  // 「〇〇%」テキスト
-    [SerializeField] private RectTransform loadingIcon;  // 円形アイコン
     [SerializeField] private TextMeshProUGUI txtLoading;  // 「ロード中」テキスト
-
+    [SerializeField] private RectTransform loadingIcon;  // 円形アイコン
+    [SerializeField] private Slider progressBar;  // 進捗バー(使用していない)
+    [SerializeField] private TextMeshProUGUI txtPercent;  // 「〇〇%」テキスト(使用していない)
+    
     [Header("設定一覧")]
     [SerializeField] private float minLoadingTime = 1.5f;  // 最低表示時間
     [SerializeField] private float rotateSpeed = 1.0f;  // アイコンが1回転する時間
@@ -66,7 +65,7 @@ public class LoadingManager : MonoBehaviour
         // 非同期読み込みを開始
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(targetScene);
 
-        // 読み込み完了後に自動でシーン切り替えを行わせない(安全制御用)
+        // 読み込み完了後に自動でシーン切替を実行しない(安全制御用)
         asyncLoad.allowSceneActivation = false;
 
         float timer = 0f;
@@ -75,21 +74,20 @@ public class LoadingManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // asyncLoad.progressは 0.0～0.9 の値をとる(0.9でロード完了)
-            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            // asyncLoad.progressは 0.0～0.9 の値をとる(使用していない)
+            // float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
 
-            // 最低表示時間を考慮した進捗率の計算
-            float timeProgress = Mathf.Clamp01(timer / minLoadingTime);
-            float currentProgress = Mathf.Min(targetProgress, timeProgress);
+            // 最低表示時間を考慮した進捗率の計算(使用していない)
+            // float timeProgress = Mathf.Clamp01(timer / minLoadingTime);
+            // float currentProgress = Mathf.Min(targetProgress, timeProgress);
 
-            // UIの更新
+            // UIの更新(使用していない)
             //if (progressBar != null) progressBar.value = currentProgress;
             //if(txtPercent != null) txtPercent.text = (currentProgress * 100f).ToString("F0") + "%";
 
-            // ロードが完了し、最低表示時間も経過した場合。
+            // ロードが完了し最低表示時間も経過した場合、シーン切替を許可する。
             if(asyncLoad.progress >= 0.9f && timer >= minLoadingTime)
             {
-                // シーン切り替えを許可
                 asyncLoad.allowSceneActivation = true;
             }
 
@@ -98,7 +96,7 @@ public class LoadingManager : MonoBehaviour
     }
 
     /// <summary>
-    /// このオブジェクト破棄時にTweenを安全停止させる処理
+    /// このオブジェクト破棄時、Tweenを安全停止させる処理。
     /// </summary>
     private void OnDestroy()
     {

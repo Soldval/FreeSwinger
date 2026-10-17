@@ -11,29 +11,71 @@ public class GameTimer : MonoBehaviour
 {
     [Header("参照するUI")]
     [SerializeField] private TextMeshProUGUI txtTimer;
-    [SerializeField] private TextMeshProUGUI txtTimeUp;
+    [SerializeField] private GameObject imgTimeUp;
+
+    [Header("カウントダウン用画像(3・2・1・Start)")]
+    [SerializeField] private GameObject imgCount3;
+    [SerializeField] private GameObject imgCount2;
+    [SerializeField] private GameObject imgCount1;
+    [SerializeField] private GameObject imgStart;
 
     [Header("タイマー設定")]
     [SerializeField] private float countdownTime = 300f;
     [SerializeField] private float timeUpDisplayDelay = 2.0f;
+    [SerializeField] private float countDisplayDuration = 1.0f;
 
     [Header("GameManagerを参照する")]
     [SerializeField] private GameManager gameManager;
 
+    [Header("PlayerControllerを参照する")]
+    [SerializeField] private PlayerController playerController;
+
+    // 内部変数リスト
     private float currentTimer;
-    private bool isTimerRunning = false;  // タイマー実行状態
+    private bool isTimerRunning = false;
 
     void Start()
     {
-        currentTimer = countdownTime;  // 現在タイマーに設定時間を入れる
+        currentTimer = countdownTime;
 
-        // 「タイムアップ」は非表示にしておく
-        if(txtTimeUp != null)
+        if(txtTimer != null)
         {
-            txtTimeUp.gameObject.SetActive(false);
+            txtTimer.text = " 5.00.00";
         }
 
-        isTimerRunning = true;
+        // 初期状態では各カウントダウン画像やタイムアップ画像を全て非表示にする
+        if(imgCount3 != null)
+        {
+            imgCount3.gameObject.SetActive(false);
+        }
+
+        if(imgCount2 != null)
+        {
+            imgCount2.gameObject.SetActive(false);
+        }
+
+        if (imgCount1 != null)
+        {
+            imgCount1.gameObject.SetActive(false);
+        }
+
+        if (imgStart != null)
+        {
+            imgStart.gameObject.SetActive(false);
+        }
+
+        if (imgTimeUp != null)
+        {
+            imgTimeUp.gameObject.SetActive(false);
+        }
+
+        // カウントダウン中はプレイヤー操作を禁止しておく
+        if(playerController != null)
+        {
+            playerController.DisableControl();
+        }
+
+        StartCoroutine(GameStartCountdownRoutine());
     }
 
     void Update()
@@ -49,10 +91,73 @@ public class GameTimer : MonoBehaviour
         {
             currentTimer = 0f;
             isTimerRunning = false;
-            StartCoroutine(OnTimeUpRoutine());  // コルーチンを開始
+            StartCoroutine(OnTimeUpRoutine());
         }
 
         UpdateTimerUI();
+    }
+
+    /// <summary>
+    /// ゲーム開始前の「3・2・1・Start」演出用コルーチン
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator GameStartCountdownRoutine()
+    {
+        // 「3」の表示
+        if(imgCount3 != null)
+        {
+            imgCount3.gameObject.SetActive(true);
+        }
+        AudioManager.PlaySECountDown();
+        yield return new WaitForSeconds(countDisplayDuration);
+        if(imgCount3 != null)
+        {
+            imgCount3.gameObject.SetActive(false);
+        }
+
+        // 「2」の表示
+        if (imgCount2 != null)
+        {
+            imgCount2.gameObject.SetActive(true);
+        }
+        AudioManager.PlaySECountDown();
+        yield return new WaitForSeconds(countDisplayDuration);
+        if (imgCount2 != null)
+        {
+            imgCount2.gameObject.SetActive(false);
+        }
+
+        // 「1」の表示
+        if (imgCount1 != null)
+        {
+            imgCount1.gameObject.SetActive(true);
+        }
+        AudioManager.PlaySECountDown();
+        yield return new WaitForSeconds(countDisplayDuration);
+        if (imgCount1 != null)
+        {
+            imgCount1.gameObject.SetActive(false);
+        }
+
+        // 「Start」の表示
+        if (imgStart != null)
+        {
+            imgStart.gameObject.SetActive(true);
+        }
+        AudioManager.PlaySEGameStart();
+        yield return new WaitForSeconds(countDisplayDuration);
+        if (imgStart != null)
+        {
+            imgStart.gameObject.SetActive(false);
+        }
+
+        isTimerRunning = true;
+
+        // プレイヤー操作を有効にする
+        if(playerController != null)
+        {
+            playerController.EnableControl();
+        }
     }
 
     /// <summary>
@@ -60,7 +165,6 @@ public class GameTimer : MonoBehaviour
     /// </summary>
     private void UpdateTimerUI()
     {
-        // ガード節
         if (txtTimer == null) return;
 
         int minutes = Mathf.FloorToInt(currentTimer / 60f);  // 現在タイマー値から分を取得
@@ -74,16 +178,37 @@ public class GameTimer : MonoBehaviour
     }
 
     /// <summary>
+    /// デバッグ用強制タイムアップ
+    /// </summary>
+    public void ForceTimeUp()
+    {
+        if (!isTimerRunning) return;
+
+        currentTimer = 0f;
+        isTimerRunning = false;
+        UpdateTimerUI();
+        StartCoroutine(OnTimeUpRoutine());
+    }
+
+    /// <summary>
     /// 「タイムアップ表示→リザルト画面移動」の処理(コルーチン)
     /// </summary>
     /// <returns>一時停止を行う IEnumerator</returns>
     private IEnumerator OnTimeUpRoutine()
     {
-        // タイムアップを表示させる
-        if(txtTimeUp != null)
+        AudioManager.StopBGM();
+
+        AudioManager.PlaySETimeUp();
+
+        if(playerController != null)
         {
-            txtTimeUp.text = "タイムアップ！！";
-            txtTimeUp.gameObject.SetActive(true);
+            playerController.DisableControl();
+        }
+
+        // タイムアップを表示させる
+        if(imgTimeUp != null)
+        {
+            imgTimeUp.gameObject.SetActive(true);
         }
 
         // 指定時間だけ一時停止する
@@ -93,6 +218,10 @@ public class GameTimer : MonoBehaviour
         if(gameManager != null)
         {
             gameManager.GoToResultScene();
+        }
+        else
+        {
+            Debug.LogWarning("GameManagerがGameTimerにアタッチされていません！");
         }
     }
 }

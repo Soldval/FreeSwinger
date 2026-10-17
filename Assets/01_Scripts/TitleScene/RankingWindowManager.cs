@@ -9,6 +9,18 @@ using TMPro;
 /// </summary>
 public class RankingWindowManager : MonoBehaviour
 {
+    // 各成績のX座標位置調整用(構造体)
+    [System.Serializable]
+    public struct GradeOffset
+    {
+        public GradeType gradeType;
+        [Tooltip("基準位置からX移動値")] public float xOffset;
+        [Tooltip("基準位置からY移動値")] public float yOffset;
+    }
+
+    [Header("各成績のX座標オフセット設定")]
+    [SerializeField] private GradeOffset[] gradeOffsets;
+
     [Header("各成績画像のデータ設定")]
     [SerializeField] private GradeImageData[] gradeImageDates;
 
@@ -41,8 +53,14 @@ public class RankingWindowManager : MonoBehaviour
     [Header("各日付データ(初期値:空文字)")]
     [SerializeField] private string[] dates = new string[5] { "", "", "", "", "" };
 
+    // 各成績画像オブジェクトの初期位置を保存しておく配列
+    private Vector2[] defaultImagePositions = new Vector2[5];
+    private bool isInitializedPositions = false;
+
     void Start()
     {
+        CacheDefalutPositions();
+
         //ランキングウィンドウの成績画像, スコア, 日付を更新する
         UpdateRankingUI();
     }
@@ -107,6 +125,9 @@ public class RankingWindowManager : MonoBehaviour
             // 見つけてきた画像データを指定したUI_Imageに入れUI表示をONにする
             targetImage.sprite = foundSprite;
             targetImage.enabled = true;
+
+            // 画像データに対しての座標位置オフセットを適用する
+            ApplyGradeOffset(targetImage, type);
         }
         else
         {
@@ -138,98 +159,65 @@ public class RankingWindowManager : MonoBehaviour
         return clearSprite;
     }
 
+    /// <summary>
+    /// 各成績画像オブジェクトの本来位置をキャッシュする処理
+    /// </summary>
+    private void CacheDefalutPositions()
+    {
+        if (isInitializedPositions) return;
+
+        for(int i = 0; i < imageGrades.Length; i++)
+        {
+            if (imageGrades[i] != null)
+            {
+                defaultImagePositions[i] = imageGrades[i].GetComponent<RectTransform>().anchoredPosition;
+            }
+        }
+        isInitializedPositions = true;
+    }
+
+    /// <summary>
+    /// 成績種類に対応した座標位置オフセットを適用する処理
+    /// </summary>
+    /// <param name="targetImage"></param>
+    /// <param name="type"></param>
+    private void ApplyGradeOffset(Image targetImage, GradeType type)
+    {
+        RectTransform rectTrans = targetImage.GetComponent<RectTransform>();
+        if(rectTrans == null) return;
+
+        // 何番目のImageか特定する
+        int index = -1;
+        for(int i = 0; i < imageGrades.Length; i++)
+        {
+            if (imageGrades[i] == targetImage)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (index < 0) return;
+
+        // 設定されたオフセット値を探す
+        float addX = 0f;
+        float addY = 0f;
+        if(gradeOffsets != null)
+        {
+            foreach(var offset in gradeOffsets)
+            {
+                if(offset.gradeType == type)
+                {
+                    addX = offset.xOffset;
+                    addY = offset.yOffset;
+                    break;
+                }
+            }
+        }
+
+        // 現在のローカルポジションを取得し座標にオフセットを加算する
+        Vector2 basePos = defaultImagePositions[index];
+        rectTrans.anchoredPosition = new Vector2(basePos.x + addX, basePos.y + addY);
+    }
+
     #endregion // 画像関係処理まとめ
-
-    #region 一括更新用の処理まとめ ----
-
-    /// <summary>
-    /// 各成績を一括更新する処理
-    /// </summary>
-    /// <param name="newGrades">更新用の成績(配列)</param>
-    public void SetGrades(GradeType[] newGrades)
-    {
-        if (newGrades == null || newGrades.Length != grades.Length) return;
-
-        // 各成績を更新する
-        for(int i = 0; i < grades.Length;i++ )
-        {
-            grades[i] = newGrades[i];
-        }
-
-        UpdateRankingUI();
-    }
-
-    /// <summary>
-    /// 各スコア値を一括更新する処理
-    /// </summary>
-    /// <param name="newScores">更新用のスコア(配列)</param>
-    public void SetScores(int[] newScores)
-    {
-        if (newScores == null || newScores.Length != scores.Length) return;
-
-        // 各スコア値を更新する
-        for (int i = 0; i < scores.Length; i++)
-        {
-            scores[i] = newScores[i];
-        }
-
-        UpdateRankingUI();
-    }
-
-    /// <summary>
-    /// 各日付を一括更新する処理
-    /// </summary>
-    /// <param name="newDates">更新用の各日付(配列)</param>
-    public void SetDates(string[] newDates)
-    {
-        if (newDates == null || newDates.Length != dates.Length) return;
-
-        // 各日付を更新する
-        for(int i = 0; i < dates.Length; i++)
-        {
-            dates[i] = newDates[i];
-        }
-
-        UpdateRankingUI();
-    }
-
-    /// <summary>
-    /// 各成績, 各スコア, 各日付を同時に一括更新する処理
-    /// </summary>
-    /// <param name="newGrades">更新用の各成績(配列)</param>
-    /// <param name="newScores">更新用の各スコア(配列)</param>
-    /// <param name="newDates">更新用の各日付(配列)</param>
-    public void SetRankingDate(GradeType[] newGrades, int[] newScores, string[] newDates)
-    {
-        // ガード節と各成績を更新する
-        if (newGrades != null && newGrades.Length == grades.Length)
-        {
-            for (int i = 0; i < grades.Length; i++)
-            {
-                grades[i] = newGrades[i];
-            }
-        }
-
-        // ガード節と各スコア値を更新する
-        if (newScores != null && newScores.Length == scores.Length)
-        {
-            for(int i = 0; i < scores.Length; i++)
-            {
-                scores[i] = newScores[i];
-            }
-        }
-
-        // ガード節と各日付を更新する
-        if(newDates != null && newDates.Length == dates.Length)
-        {
-            for(int i = 0; i < dates.Length; i++)
-            {
-                dates[i] = newDates[i];
-            }
-        }
-
-        UpdateRankingUI();
-    }
-
-    #endregion // 一括更新用の処理まとめ
 }

@@ -38,9 +38,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform rightHandTarget;
     [SerializeField][Range(0, 1)] private float rightIkWeight = 1.0f;
 
-    [Header("左手用 IK設定")]
+    [Header("左手・左肘用 IK設定")]
     [SerializeField] private Transform leftHandTarget;
     [SerializeField] private Transform leftElbowHint;
+    [SerializeField] private Transform chargeLeftHandTarget;
+    [SerializeField] private Transform chargeLeftElbowHint;
     [SerializeField][Range(0, 1)] private float LeftIkWeight = 1.0f;
 
     [Header("トレイル設定")]
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     // その他内部変数
     private ThirdPersonController thirdPersonController;
     private Coroutine autoEndSwingCoroutine;
+    private bool canControl = true;
 
     void Start()
     {
@@ -83,6 +86,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!canControl) return;
+
         // Spaceキー押し始めたら構え状態に入る
         if(Input.GetKeyDown(KeyCode.Space) && !isSwinging && !isCharging)
         {
@@ -109,6 +114,38 @@ public class PlayerController : MonoBehaviour
         {
             batAnchorRight.localPosition = chargeBatPosition;
             batAnchorRight.localRotation = Quaternion.Euler(chargeBatRotation);
+        }
+    }
+
+    public void EnableControl()
+    {
+        canControl = true;
+
+        if(thirdPersonController != null)
+        {
+            thirdPersonController.enabled = true;
+        }
+    }
+
+    /// <summary>
+    /// プレイヤー操作を一切禁止にする処理
+    /// </summary>
+    public void DisableControl()
+    {
+        canControl = false;
+
+        if(isCharging)
+        {
+            isCharging = false;
+            if(animator != null)
+            {
+                animator.SetBool("IsCharging", false);
+            }
+        }
+
+        if(thirdPersonController != null)
+        {
+            thirdPersonController.enabled = false;
         }
     }
 
@@ -142,9 +179,9 @@ public class PlayerController : MonoBehaviour
             batAnchorRight.localRotation = Quaternion.Euler(chargeBatRotation);
         }
 
-        // チャージアニメーションに手を追従させるため、IKをOFFにする
+        // チャージアニメーション時、右手はアニメーションに合わせ左手はIKでバットをしっかり持つ。
         DisableRightHandIK();
-        DisableLeftHandIK();
+        EnableLeftHandIK();
     }
 
     /// <summary>
@@ -273,20 +310,24 @@ public class PlayerController : MonoBehaviour
             animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
         }
 
+        // チャージ中ならばチャージ用ターゲットを使い、通常時は通常ターゲットを使う。
+        Transform targetHand = (isCharging && chargeLeftHandTarget != null) ? chargeLeftHandTarget : leftHandTarget;
+        Transform targetElbow = (isCharging && chargeLeftElbowHint != null) ? chargeLeftElbowHint : leftElbowHint;
+
         // 左手のIK処理
-        if (leftHandTarget != null)
+        if (targetHand != null)
         {
             // 位置と回転の吸着度合
             animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, LeftIkWeight);
             animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, LeftIkWeight);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, leftHandTarget.position);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, leftHandTarget.rotation);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, targetHand.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, targetHand.rotation);
 
             // 肘の曲がる方向制御
-            if (leftElbowHint != null)
+            if (targetElbow != null)
             {
                 animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, LeftIkWeight);
-                animator.SetIKHintPosition(AvatarIKHint.LeftElbow, leftElbowHint.position);
+                animator.SetIKHintPosition(AvatarIKHint.LeftElbow, targetElbow.position);
             }
         }
         else

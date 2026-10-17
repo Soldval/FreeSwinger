@@ -14,7 +14,7 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ResultScore;
 
     [Header("スコアのカウントアップ演出設定")]
-    [SerializeField] private float countUpDuration = 2.0f;  // カウントアップにかかる時間
+    [SerializeField] private float countUpDuration = 1.25f;  // カウントアップにかかる時間
     [SerializeField] private Ease countUpEase = Ease.OutExpo;  // 減速アニメーションのイージング
 
     [Header("各成績画像のデータ設定")]
@@ -33,8 +33,8 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private GameObject resultFirstSelectionButton;
 
     [Header("デバッグ用設定")]
-    [SerializeField] private bool isDebugMode = false;  // デバッグモード
-    [SerializeField] private int debugScore = 0; // デバッグ用スコア
+    [SerializeField] private bool isDebugMode = false;
+    [SerializeField] private int debugScore = 0;
 
     // 内部変数
     private GameObject lastSelectedObject;
@@ -61,12 +61,6 @@ public class ResultManager : MonoBehaviour
         }
 
         PlayResultSequence(finalScore);
-
-        // スコアのカウントアップ演出を開始
-        //StartScoreCountUp(finalScore);
-
-        // 選択ボタンの設定
-        //lastSelectedObject = UIUtils.SetFocusWithoutSound(resultFirstSelectionButton);
     }
 
     void Update()
@@ -76,77 +70,6 @@ public class ResultManager : MonoBehaviour
     }
 
     #region スコア・成績表示処理 ----
-
-    /// <summary>
-    /// 一連のリザルト演出(スコアカウントアップ → 成績表示 → ボタン表示)の処理
-    /// </summary>
-    /// <param name="targetScore">最終スコア</param>
-    private void PlayResultSequence(int targetScore)
-    {
-        // 成績画像を非表示する
-        if(imageGrade != null)
-        {
-            imageGrade.sprite = clearSprite;
-            imageGrade.enabled = (clearSprite != null);
-            imageGrade.transform.localScale = Vector3.zero;  // 拡大率を0にする
-        }
-
-        KillAllTweens();
-
-        AudioManager.PlaySECountUp();  // カウントアップ効果音を再生
-
-        // 【ステップ1】スコアのカウントアップ演出
-        countUpTween = DOVirtual.Float(0f, targetScore, countUpDuration, value =>
-        {
-            UpdateScoreUI(Mathf.FloorToInt(value));
-        })
-        .SetEase(countUpEase)
-        .OnComplete(() =>
-        {
-            UpdateScoreUI(targetScore);
-        });
-
-        // シーケンス演出の構築
-        resultSequence = DOTween.Sequence();
-
-        // カウントアップ完了まで待つ
-        resultSequence.Append(countUpTween);
-
-        // 【ステップ2】成績画像の表示
-        resultSequence.AppendCallback(() =>
-        {
-            AudioManager.PlaySEGradeAppear();
-
-            UpdateGradeImageByScore(targetScore);
-        });
-
-        if(imageGrade != null)
-        {
-            // 画像が少し跳ねるアニメーション
-            resultSequence.Append(imageGrade.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));
-        }
-
-        resultSequence.AppendCallback(() =>
-        {
-            if (targetScore >= 60000)
-            {
-                AudioManager.PlaySECheer();
-            }
-            else if (targetScore >= 20000)
-            {
-                AudioManager.PlaySEApplause();
-            }
-        });
-
-        // 少しだけ余韻
-        resultSequence.AppendInterval(0.2f);
-
-        // 【ステップ3】ボタン群のフェードインとフォーカス
-        resultSequence.AppendCallback(() =>
-        {
-            ShowButtons();
-        });
-    }
 
     /// <summary>
     /// スコアのUI表示を更新する処理
@@ -233,6 +156,91 @@ public class ResultManager : MonoBehaviour
         return clearSprite;
     }
 
+    /// <summary>
+    /// 一連のリザルト演出(スコアカウントアップ → 成績表示 → ボタン表示)の処理
+    /// </summary>
+    /// <param name="targetScore">最終スコア</param>
+    private void PlayResultSequence(int targetScore)
+    {
+        // 成績画像を非表示する
+        if (imageGrade != null)
+        {
+            imageGrade.sprite = clearSprite;
+            imageGrade.enabled = (clearSprite != null);
+            imageGrade.transform.localScale = Vector3.zero;  // 拡大率を0にする
+        }
+
+        KillAllTweens();
+
+        if (targetScore > 0)
+        {
+            AudioManager.PlaySECountUp();  // カウントアップ効果音を再生
+        }
+
+        // 【ステップ1】スコアのカウントアップ演出
+        countUpTween = DOVirtual.Float(0f, targetScore, countUpDuration, value =>
+        {
+            UpdateScoreUI(Mathf.FloorToInt(value));
+        })
+        .SetEase(countUpEase)
+        .OnComplete(() =>
+        {
+            UpdateScoreUI(targetScore);
+        });
+
+        // シーケンス演出の構築
+        resultSequence = DOTween.Sequence();
+
+        // カウントアップ完了まで待つ
+        resultSequence.Append(countUpTween);
+
+        // 【ステップ2】成績画像の表示
+        resultSequence.AppendCallback(() =>
+        {
+            if (targetScore >= 60000)
+            {
+                AudioManager.PlaySEHighGrade();
+            }
+            else if (targetScore >= 20000)
+            {
+                AudioManager.PlaySEMiddleGrade();
+            }
+            else
+            {
+                AudioManager.PlaySELowGrade();
+            }
+
+            UpdateGradeImageByScore(targetScore);
+        });
+
+        if (imageGrade != null)
+        {
+            // 画像が少し跳ねるアニメーション
+            resultSequence.Append(imageGrade.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));
+        }
+
+        resultSequence.AppendCallback(() =>
+        {
+            if (targetScore >= 60000)
+            {
+                AudioManager.PlaySECheer();
+            }
+            else if (targetScore >= 20000)
+            {
+                AudioManager.PlaySEApplause();
+            }
+        });
+
+        // 少しだけ余韻
+        resultSequence.AppendInterval(0.2f);
+
+        // 【ステップ3】ボタン群のフェードインとフォーカス
+        resultSequence.AppendCallback(() =>
+        {
+            ShowButtons();
+        });
+    }
+
     #endregion // スコア・成績表示処理 ----
 
     #region 各ボタンの処理 ----
@@ -296,6 +304,8 @@ public class ResultManager : MonoBehaviour
 
     #endregion // 各ボタンの処理 ----
 
+    #region その他処理 ----
+
     /// <summary>
     /// 全てのTweenを破棄する処理
     /// </summary>
@@ -313,7 +323,7 @@ public class ResultManager : MonoBehaviour
         KillAllTweens();
     }
 
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
 
     /// <summary>
     /// Inspectorでデバッグ用スコア値を変更した瞬間に自動実行される処理
@@ -329,4 +339,6 @@ public class ResultManager : MonoBehaviour
     }
 
     #endif
+
+    #endregion // その他処理 ----
 }

@@ -1,6 +1,5 @@
 // AudioManager.cs
 
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
-    // どこからでも呼び出せるようにする(シングルトン)
+    // インスタンス(シングルトン)
     public static AudioManager instance;
 
     [Header("再生用スピーカー")]
@@ -25,25 +24,29 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip sePressAnyButton;  // PRESS ANY BUTTON 効果音
 
     [Header("UI効果音素材(ゲームシーン)")]
+    [SerializeField] private AudioClip seCountDown;  // ゲーム開始前カウントダウン効果音
+    [SerializeField] private AudioClip seGameStart;  // ゲーム開始効果音
+    [SerializeField] private AudioClip seTimeUp;  // タイムアップ効果音
     [SerializeField] private AudioClip seLeftSwing;  // 左スイング効果音
 
     [Header("UI効果音素材(リザルトシーン)")]
     [SerializeField] private AudioClip seCountUp;  // カウントアップ効果音
-    [SerializeField] private AudioClip seGradeAppear;  // 成績表示効果音
+    [SerializeField] private AudioClip seHighGrade;  // 高成績効果音
+    [SerializeField] private AudioClip seMiddleGrade;  // 中成績効果音
+    [SerializeField] private AudioClip seLowGrade;  // 低成績効果音
     [SerializeField] private AudioClip seCheer;  // 歓声効果音
     [SerializeField] private AudioClip seApplause;  // 拍手効果音
 
     private void Awake()
     {
-        // AudioManagerのinstanceはシーン内に1つのみにする(シングルトンパターン)
+        // AudioManagerのinstanceはシングルトンとして扱う
         if(instance == null)
         {
-            instance = this;  // 自分自身のinstanceを登録
-            DontDestroyOnLoad(gameObject);  // シーンが切り替わってもinstanceを保護する
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            // AudioManagerのinstanceが重複したら2個目はすぐに削除
             Destroy(gameObject);
         }
     }
@@ -99,6 +102,36 @@ public class AudioManager : MonoBehaviour
     #region ゲームシーンSE処理まとめ ----
 
     /// <summary>
+    /// スタート前カウントダウン効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySECountDown()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seCountDown);
+    }
+
+    /// <summary>
+    /// ゲームスタート効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEGameStart()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seGameStart);
+    }
+
+    /// <summary>
+    /// タイムアップ効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySETimeUp()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seTimeUp);
+    }
+
+    /// <summary>
     /// 左スイング効果音を鳴らす処理
     /// </summary>
     public static void PlaySELeftSwing()
@@ -123,13 +156,33 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 成績表示効果音を鳴らす処理
+    /// 高成績効果音を鳴らす処理
     /// </summary>
-    public static void PlaySEGradeAppear()
+    public static void PlaySEHighGrade()
     {
         if (instance == null) return;
 
-        instance.PlaySE(instance.seGradeAppear);
+        instance.PlaySE(instance.seHighGrade);
+    }
+
+    /// <summary>
+    /// 中成績効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEMiddleGrade()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seMiddleGrade);
+    }
+
+    /// <summary>
+    /// 低成績効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySELowGrade()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seLowGrade);
     }
 
     /// <summary>

@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     [Header("スコア関連")]
     [SerializeField] private GameScore gameScore;  // スコア管理クラスを参照
 
+    [Header("タイマー関連")]
+    [SerializeField] private GameTimer gameTimer;
+
     [Header("ポーズウィンドウ関連")]
     [SerializeField] private GameObject pauseWindow;  // ポーズウィンドウ
     [SerializeField] private GameObject pauseFirstSelectionButton;  // ポーズウィンドウ開始時に選択されるボタン
@@ -24,11 +27,11 @@ public class GameManager : MonoBehaviour
     [Header("デバッグ用設定")]
     [SerializeField] private bool isDebugMode = true;  // デバッグモード
 
-    // 前回選択オブジェクトの記憶
+    // 内部変数リスト
     private GameObject lastSelectedObject;
 
-    // ポーズ状態(ゲームシーン開始時はOFF)
     private bool isPaused = false;
+    private bool isTimeUp = false;
 
     void Start()
     {
@@ -39,11 +42,21 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // タイムアップ時は他の入力を受け付けない
+        if (isTimeUp) return;
+
         // デバッグモード時の処理
         // Zキー押下でリザルトシーンに移動する
-        if(isDebugMode && Input.GetKeyDown(KeyCode.Z))
+        if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
         {
-            GoToResultScene();
+            if(gameTimer != null)
+            {
+                gameTimer.ForceTimeUp();
+            }
+            else
+            {
+                GoToResultScene();
+            }
         }
 
         // Escキーが押された場合
@@ -74,6 +87,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GoToResultScene()
     {
+        // タイムアップ処理の二重実行を防ぐ
+        if (isTimeUp) return;
+        isTimeUp = true;
+
         Time.timeScale = 1f;
         SetHUDActive(false);
 

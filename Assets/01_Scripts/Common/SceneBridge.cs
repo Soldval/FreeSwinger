@@ -1,7 +1,7 @@
 // SceneBridge.cs
 
 /// <summary>
-/// シーン移動の共通処理クラス
+/// シーン移動用の共通処理クラス
 /// </summary>
 public static class SceneBridge
 {
