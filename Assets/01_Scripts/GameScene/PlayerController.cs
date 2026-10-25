@@ -46,7 +46,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0, 1)] private float LeftIkWeight = 1.0f;
 
     [Header("トレイル設定")]
-    [SerializeField] private TrailRenderer batTrailRenderer;
+    //[SerializeField] private BatTrailMesh batTrailMesh;
+    [SerializeField] private TrailRenderer batTrailRendererTop;
+    [SerializeField] private TrailRenderer batTrailRendererUnder;
+
+    [Header("エフェクト設定")]
+    [SerializeField] private EffectController effectController;
 
     // バットの初期位置・角度保存用変数
     private Vector3 initialAnchorPosition;
@@ -54,13 +59,16 @@ public class PlayerController : MonoBehaviour
 
     // その他内部変数
     private ThirdPersonController thirdPersonController;
+    private CharacterController characterController;
     private Coroutine autoEndSwingCoroutine;
+    private float lockedGroundY;
     private bool canControl = true;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         thirdPersonController = GetComponent<ThirdPersonController>();
+        characterController = GetComponent<CharacterController>();
 
         // 通常速度を初期設定から記録
         if(thirdPersonController != null )
@@ -98,6 +106,12 @@ public class PlayerController : MonoBehaviour
         if(isCharging)
         {
             chargeTimer += Time.deltaTime;
+
+            // チャージ中のエフェクト進行度を更新
+            if(effectController != null)
+            {
+                effectController.UpdateChargeProgress(chargeTimer, chargeThreshold);
+            }
         }
 
         // Spaceキーを離し瞬間にスイングする
@@ -109,11 +123,11 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {
-        // チャージ中のみアニメーションによる上書きを防ぐため毎フレーム位置・回転を強制適用
-        if(isCharging && batAnchorRight != null)
+        if(isSwinging)
         {
-            batAnchorRight.localPosition = chargeBatPosition;
-            batAnchorRight.localRotation = Quaternion.Euler(chargeBatRotation);
+            Vector3 pos = transform.position;
+            pos.y = lockedGroundY;
+            transform.position = pos;
         }
     }
 
@@ -137,6 +151,10 @@ public class PlayerController : MonoBehaviour
         if(isCharging)
         {
             isCharging = false;
+            if(effectController != null)
+            {
+                effectController.StopAllEffects();
+            }
             if(animator != null)
             {
                 animator.SetBool("IsCharging", false);
@@ -157,10 +175,18 @@ public class PlayerController : MonoBehaviour
         isCharging = true;
         chargeTimer = 0.0f;
 
+        lockedGroundY = transform.position.y;
+
         // 移動速度をチャージ用低速にする
         if(thirdPersonController != null)
         {
             thirdPersonController.MoveSpeed = chargeMoveSpeed;
+        }
+
+        // チャージ開始のエフェクトを呼び出す
+        if(effectController != null)
+        {
+            effectController.StartChargeEffect();
         }
 
         // 残っているスイングTriggerをクリアする
@@ -200,24 +226,25 @@ public class PlayerController : MonoBehaviour
             thirdPersonController.enabled = false;
         }
 
+        // スイング中はCharacterControllerも無効化して足の位置を地面に固定する
+        if(characterController != null)
+        {
+            characterController.enabled = false;
+        }
+
         // チャージ状態を解除する
         if (animator != null)
         {
             animator.SetBool("IsCharging", false);
         }
-
-        // スイング開始時にBatAnchor_rの親を「右手ボーン」に切り替える
-        if (batAnchorRight != null && rightHandBone != null)
+        
+        // EffectController側のスイングエフェクト開始メソッドを呼び出す
+        if(effectController != null)
         {
-            batAnchorRight.SetParent(rightHandBone, true);
+            bool isMaxCharged = (chargeTimer >= chargeThreshold);
+            effectController.StartSwingEffect(isMaxCharged);
         }
 
-        // トレイル描画を開始
-        if(batTrailRenderer != null)
-        {
-            batTrailRenderer.emitting = true;
-        }
-              
         // スイング開始時に両手のIKをOFFにする
         DisableRightHandIK();
         DisableLeftHandIK();
@@ -248,6 +275,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("EndSwing実行");
 
         isSwinging = false;
+        isCharging = false;
 
         // コルーチンが走っていれば停止
         if(autoEndSwingCoroutine != null)
@@ -263,10 +291,16 @@ public class PlayerController : MonoBehaviour
             thirdPersonController.MoveSpeed = normalMoveSpeed;
         }
 
-        // トレイル描画を停止
-        if(batTrailRenderer != null)
+        // CharacterControllerを再有効化する
+        if(characterController != null)
         {
-            batTrailRenderer.emitting = false;
+            characterController.enabled = true;
+        }
+
+        // エフェクトを全て停止・消去する
+        if(effectController != null)
+        {
+            effectController.StopAllCoroutines();
         }
 
         // スイング終了時に両手のIKをONにする
@@ -380,5 +414,29 @@ public class PlayerController : MonoBehaviour
         batAnchorRight.SetParent(chestBone, false);
         batAnchorRight.localPosition = initialAnchorPosition;
         batAnchorRight.localRotation = initialAnchorRotation;
+
+        if(animator != null)
+        {
+            animator.SetBool("IsCharging", false);
+        }
+    }
+
+    /// <summary>
+    /// [アニメーションイベント用] バットを右手ボーンの子にする処理
+    /// </summary>
+    public void AttachBatToRightHand()
+    {
+        if(batAnchorRight != null && rightHandBone != null)
+        {
+            batAnchorRight.SetParent(rightHandBone, true);
+        }
+    }
+
+    public void AttachBatToChest()
+    {
+        if(batAnchorRight != null && chestBone != null)
+        {
+            batAnchorRight.SetParent(chestBone, true);
+        }
     }
 }

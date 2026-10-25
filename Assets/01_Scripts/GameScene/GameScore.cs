@@ -2,6 +2,9 @@
 
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
+using Unity.VisualScripting;
+using System;
 
 /// <summary>
 /// ゲームシーンのスコア管理用クラス
@@ -16,6 +19,13 @@ public class GameScore : MonoBehaviour
 
     [Header("スコア設定")]
     [SerializeField] private int currentScore = 0;
+
+    [Header("カウントアップ設定")]
+    [SerializeField] private float countUpDuration = 0.5f;
+
+    // 内部変数
+    private int displayScore = 0;
+    private Tween scoreTween;
 
     void Awake()
     {
@@ -32,7 +42,8 @@ public class GameScore : MonoBehaviour
 
     void Start()
     {
-        UpdateScoreUI();
+        displayScore = currentScore;
+        UpdateScoreUI(displayScore);
     }
 
     void Update()
@@ -56,8 +67,11 @@ public class GameScore : MonoBehaviour
     /// <param name="amount">加算する値</param>
     public void AddScore(int amount)
     {
+        int previousScore = currentScore;
         currentScore += amount;
-        UpdateScoreUI();
+
+        // カウントアップ演出でUIを更新する
+        AnimateScore(previousScore, currentScore);
     }
 
     /// <summary>
@@ -72,11 +86,28 @@ public class GameScore : MonoBehaviour
     /// <summary>
     /// スコア表示を更新する処理
     /// </summary>
-    private void UpdateScoreUI()
+    private void UpdateScoreUI(int score)
     {
         if (txtScore == null) return;
 
         // {0:N0}は3桁区切りのカンマ表示になる
-        txtScore.text = string.Format("{0:N0}" + "pt", currentScore);
+        txtScore.text = string.Format("{0:N0}" + "pt", score);
+    }
+
+    private void AnimateScore(int fromScore, int toScore)
+    {
+        // すでにアニメーション中であれば、一度停止して競合を防ぐ
+        if(scoreTween != null && scoreTween.IsActive())
+        {
+            scoreTween.Kill();
+        }
+
+        // fromScoreからtoScoreまで一定時間かけて数値を変化させる
+        scoreTween = DOVirtual.Int(fromScore, toScore, countUpDuration, (value) =>
+                     {
+                         displayScore = value;
+                         UpdateScoreUI(displayScore);
+                     })
+                     .SetEase(Ease.OutQuad);
     }
 }

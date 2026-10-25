@@ -10,6 +10,9 @@ using DG.Tweening;
 /// </summary>
 public class ResultManager : MonoBehaviour
 {
+    [Header("ランキング管理への参照")]
+    [SerializeField] private RankingWindowManager rankingWindowManager;
+
     [Header("スコア表示用UI")]
     [SerializeField] private TextMeshProUGUI ResultScore;
 
@@ -38,13 +41,12 @@ public class ResultManager : MonoBehaviour
 
     // 内部変数
     private GameObject lastSelectedObject;
+    private int cachedFinalScore;
     private Tween countUpTween;
     private Sequence resultSequence;
 
     void Start()
     {
-        int finalScore;
-
         AudioManager.StopBGM();
 
         InitializeButtonsUI();
@@ -52,15 +54,15 @@ public class ResultManager : MonoBehaviour
         if(!isDebugMode)
         {
             // 通常時の処理
-            finalScore = PlayerPrefs.GetInt("FINAL_SCORE", 0);
+            cachedFinalScore = PlayerPrefs.GetInt("FINAL_SCORE", 0);
         }
         else
         {
             // デバッグモード時の処理
-            finalScore = debugScore;
+            cachedFinalScore = debugScore;
         }
 
-        PlayResultSequence(finalScore);
+        PlayResultSequence(cachedFinalScore);
     }
 
     void Update()
@@ -186,6 +188,19 @@ public class ResultManager : MonoBehaviour
         .OnComplete(() =>
         {
             UpdateScoreUI(targetScore);
+
+            // カウントアップが完了したタイミングでランキングの判定・保存を行う
+            if(RankingDataStore.Instance != null)
+            {
+                // スコアから成績を判別して取得するメソッドを呼ぶか判定を行う
+                GradeType achievedGrade = GetGradeTypeByScore(targetScore);
+
+                int registeredRank = RankingDataStore.Instance.CheckAndRegisterRanking(targetScore, achievedGrade);
+                if(registeredRank >= 0)
+                {
+                    Debug.Log($"{registeredRank + 1}位にランクインしました！");
+                }
+            }
         });
 
         // シーケンス演出の構築
@@ -239,6 +254,22 @@ public class ResultManager : MonoBehaviour
         {
             ShowButtons();
         });
+    }
+
+    /// <summary>
+    /// スコアからGradeTypeを割り出す処理
+    /// </summary>
+    /// <param name="score"></param>
+    /// <returns></returns>
+    private GradeType GetGradeTypeByScore(int score)
+    {
+        if (score >= 100000) return GradeType.MVPSlugger;
+        if (score >= 80000)  return GradeType.GoldSlugger;
+        if (score >= 60000)  return GradeType.SliverSlugger;
+        if (score >= 40000)  return GradeType.MainSlugger;
+        if (score >= 20000)  return GradeType.Moudasyo;
+        if (score >= 0)      return GradeType.LightHitter;
+        return GradeType.None;
     }
 
     #endregion // スコア・成績表示処理 ----

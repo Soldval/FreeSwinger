@@ -3,6 +3,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 /// <summary>
 /// ランキングウィンドウの内容を管理するクラス
@@ -60,6 +61,18 @@ public class RankingWindowManager : MonoBehaviour
     void Start()
     {
         CacheDefalutPositions();
+
+        // RankingDataStoreが存在していればそこからデータを取得して配列に反映する
+        if(RankingDataStore.Instance != null)
+        {
+            RankingDataStore.Instance.LoadRankingData();
+            for(int i = 0; i < 5; i++)
+            {
+                scores[i] = RankingDataStore.Instance.scores[i];
+                grades[i] = RankingDataStore.Instance.grades[i];
+                dates[i] = RankingDataStore.Instance.dates[i];
+            }
+        }
 
         //ランキングウィンドウの成績画像, スコア, 日付を更新する
         UpdateRankingUI();

@@ -3,6 +3,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 /// <summary>
 /// ゲームシーンのタイマー管理用クラス
@@ -104,51 +105,18 @@ public class GameTimer : MonoBehaviour
     private IEnumerator GameStartCountdownRoutine()
     {
         // 「3」の表示
-        if(imgCount3 != null)
-        {
-            imgCount3.gameObject.SetActive(true);
-        }
-        AudioManager.PlaySECountDown();
-        yield return new WaitForSeconds(countDisplayDuration);
-        if(imgCount3 != null)
-        {
-            imgCount3.gameObject.SetActive(false);
-        }
+        yield return StartCoroutine(PlayerCountAnimation(imgCount3));
 
         // 「2」の表示
-        if (imgCount2 != null)
-        {
-            imgCount2.gameObject.SetActive(true);
-        }
-        AudioManager.PlaySECountDown();
-        yield return new WaitForSeconds(countDisplayDuration);
-        if (imgCount2 != null)
-        {
-            imgCount2.gameObject.SetActive(false);
-        }
+        yield return StartCoroutine(PlayerCountAnimation(imgCount2));
 
         // 「1」の表示
-        if (imgCount1 != null)
-        {
-            imgCount1.gameObject.SetActive(true);
-        }
-        AudioManager.PlaySECountDown();
-        yield return new WaitForSeconds(countDisplayDuration);
-        if (imgCount1 != null)
-        {
-            imgCount1.gameObject.SetActive(false);
-        }
+        yield return StartCoroutine(PlayerCountAnimation(imgCount1));
 
         // 「Start」の表示
         if (imgStart != null)
         {
-            imgStart.gameObject.SetActive(true);
-        }
-        AudioManager.PlaySEGameStart();
-        yield return new WaitForSeconds(countDisplayDuration);
-        if (imgStart != null)
-        {
-            imgStart.gameObject.SetActive(false);
+            yield return StartCoroutine(PlayerStartAnimation(imgStart));
         }
 
         isTimerRunning = true;
@@ -158,6 +126,64 @@ public class GameTimer : MonoBehaviour
         {
             playerController.EnableControl();
         }
+    }
+
+    /// <summary>
+    /// 3・2・1用のDOTweenアニメーション処理
+    /// </summary>
+    /// <param name="targetObj"></param>
+    /// <returns></returns>
+    private IEnumerator PlayerCountAnimation(GameObject targetObj)
+    {
+        if (targetObj == null) yield break;
+
+        RectTransform rectTrans = targetObj.GetComponent<RectTransform>();
+
+        // 初期状態の設定
+        targetObj.SetActive(true);
+        rectTrans.localScale = Vector3.one * 1.5f;
+
+        AudioManager.PlaySECountDown();
+
+        // 徐々に小さくなりながら透明になって消える
+        Sequence seq = DOTween.Sequence();
+        seq.Append(rectTrans.DOScale(0.05f, countDisplayDuration).SetEase(Ease.InBack));
+
+        // アニメーションが終わるのを待つ
+        yield return seq.WaitForCompletion();
+
+        targetObj.SetActive(false);
+    }
+
+    /// <summary>
+    /// Start用のDOTweenアニメーション処理
+    /// </summary>
+    /// <param name="targetObj"></param>
+    /// <returns></returns>
+    private IEnumerator PlayerStartAnimation(GameObject targetObj)
+    {
+        if(targetObj == null) yield break;
+
+        RectTransform rectTrans = targetObj.GetComponent<RectTransform>();
+
+        // 初期状態の設定
+        targetObj.SetActive(true);
+        rectTrans.localScale = Vector3.one * 0.5f;
+
+        AudioManager.PlaySEGameStart();
+
+        // 力強く大きく表示させる
+        Sequence seq = DOTween.Sequence();
+        seq.Append(rectTrans.DOScale(1.2f, 0.3f).SetEase(Ease.OutBack));
+
+        // アニメーションが終わるのを待つ
+        yield return seq.WaitForCompletion();
+
+        // 大きい表示のままキープする
+        float displayHoldTime = Mathf.Max(0.1f, countDisplayDuration - 0.3f);
+        yield return new WaitForSeconds(displayHoldTime);
+
+        targetObj.SetActive(false);
     }
 
     /// <summary>

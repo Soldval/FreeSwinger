@@ -5,6 +5,10 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEditor;
+using UnityEngine.UIElements;
+
+using Slider = UnityEngine.UI.Slider;
+using Image = UnityEngine.UI.Image;
 
 /// <summary>
 /// サウンド調整・画面明暗度のシステム設定を管理するクラス
@@ -84,17 +88,30 @@ public class SystemOptionManager : MonoBehaviour
 
     private void RestoreSliderValues()
     {
-        GameObject masterObj = GameObject.Find("SW_Slider_Master");
-        if (masterObj != null) masterSlider = masterObj.GetComponent<Slider>();
+        // シーン内の全てのスライダー(非アクティブも含む)を検索し名前で割り当てる
+        Slider[] allSliders = Resources.FindObjectsOfTypeAll<Slider>();
+        foreach(var slider in allSliders)
+        {
+            // シーン上に存在するものだけ対象にする
+            if (!slider.gameObject.scene.IsValid()) continue;
 
-        GameObject bgmObj = GameObject.Find("SW_Slider_BGM");
-        if (bgmObj != null) bgmSlider = bgmObj.GetComponent<Slider>();
-
-        GameObject seObj = GameObject.Find("SW_Slider_SE");
-        if (seObj != null) seSlider = seObj.GetComponent<Slider>();
-
-        GameObject brightnessObj = GameObject.Find("SW_Slider_Brightness");
-        if (brightnessObj != null) brightnessSlider = brightnessObj.GetComponent<Slider>();
+            if (slider.name == "SW_Slider_Master")
+            {
+                masterSlider = slider;
+            }
+            else if (slider.name == "SW_Slider_BGM")
+            {
+                bgmSlider = slider;
+            }
+            else if (slider.name == "SW_Slider_SE")
+            {
+                seSlider = slider;
+            }
+            else if (slider.name == "SW_Slider_Brightness")
+            {
+                brightnessSlider = slider;
+            }
+        }
 
         // 保存されている設定値を読み込む
         float masterVol = PlayerPrefs.GetFloat(MASTER_KEY, DEFAULT_VOLUME);
@@ -102,11 +119,11 @@ public class SystemOptionManager : MonoBehaviour
         float seVol = PlayerPrefs.GetFloat(SE_KEY, DEFAULT_VOLUME);
         float brightnessVal = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, DEFAULT_BRIGHTNESS);
 
-        // スライダーのUIに値を反映しつつ、イベント（リスナー）を再登録する
+        // 値を代入する前にリスナーをクリアし誤作動を防ぐ
         if (masterSlider != null)
         {
-            masterSlider.value = masterVol;
             masterSlider.onValueChanged.RemoveAllListeners(); // 多重登録を防ぐため一旦クリア
+            masterSlider.value = masterVol;
             masterSlider.onValueChanged.AddListener((val) => {
                 SetMasterVolume(val);
                 PlayerPrefs.SetFloat(MASTER_KEY, val);
@@ -115,8 +132,8 @@ public class SystemOptionManager : MonoBehaviour
 
         if (bgmSlider != null)
         {
-            bgmSlider.value = bgmVol;
             bgmSlider.onValueChanged.RemoveAllListeners();
+            bgmSlider.value = bgmVol;
             bgmSlider.onValueChanged.AddListener((val) => {
                 SetBGMVolume(val);
                 PlayerPrefs.SetFloat(BGM_KEY, val);
@@ -125,8 +142,8 @@ public class SystemOptionManager : MonoBehaviour
 
         if (seSlider != null)
         {
-            seSlider.value = seVol;
             seSlider.onValueChanged.RemoveAllListeners();
+            seSlider.value = seVol;
             seSlider.onValueChanged.AddListener((val) => {
                 SetSEVolume(val);
                 PlayerPrefs.SetFloat(SE_KEY, val);
@@ -135,8 +152,8 @@ public class SystemOptionManager : MonoBehaviour
 
         if (brightnessSlider != null)
         {
-            brightnessSlider.value = brightnessVal;
             brightnessSlider.onValueChanged.RemoveAllListeners();
+            brightnessSlider.value = brightnessVal;
             brightnessSlider.onValueChanged.AddListener((val) => {
                 SetBrightness(val);
                 PlayerPrefs.SetFloat(BRIGHTNESS_KEY, val);

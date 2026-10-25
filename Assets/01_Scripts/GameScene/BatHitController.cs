@@ -11,7 +11,7 @@ public class BatHitController : MonoBehaviour
 {
     [Header("バットの吹っ飛ばす強さ")]
     [SerializeField] private float hitPower = 15.0f;
-    [SerializeField] private float upwardPower = 5.0f;
+    [SerializeField] private float upwardPower = 15.0f;
 
     [Header("加算スコア設定")]
     [SerializeField] private int hitScore = 100;
@@ -26,6 +26,13 @@ public class BatHitController : MonoBehaviour
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
         if (rb == null) return;
 
+        // ObjectDestructorが付いている場合、「打たれたよ」と伝える。
+        ObjectDestructor destructor = collision.gameObject.GetComponent<ObjectDestructor>();
+        if(destructor != null)
+        {
+            destructor.MarkAsHit();
+        }
+
         // 衝突した地点から前方へ力を加える
         Vector3 hitDirection = (collision.transform.position - transform.position).normalized;
 
@@ -34,6 +41,10 @@ public class BatHitController : MonoBehaviour
 
         // 力を加えてオブジェクトを吹っ飛ばす
         rb.AddForce(finalForce, ForceMode.Impulse);
+
+        // 打たれたオブジェクトにランダムな回転を与える
+        Vector3 randomtorque = new Vector3(UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f)) * 50f;
+        rb.AddTorque(randomtorque, ForceMode.Impulse);
 
         // スコア加算
         if(GameScore.Instance != null)
