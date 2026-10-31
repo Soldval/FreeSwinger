@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// UI操作に関連する共通処理クラス
+/// UI操作に関連する共通クラス
 /// </summary>
 public static class UIUtils
 {
     /// <summary>
-    /// オブジェクトをフォーカスにする(効果音は鳴らさない)
+    /// オブジェクトをフォーカスにする(SEは鳴らさない)
     /// </summary>
     /// <param name="target">フォーカスにするオブジェクト</param>
     /// <returns>フォーカスにするオブジェクト GameObject</returns>
@@ -20,7 +20,7 @@ public static class UIUtils
         EventSystem.current.SetSelectedGameObject(null);  // 現在の選択オブジェクトを空にする
         EventSystem.current.SetSelectedGameObject(target);  // 選んだオブジェクトをフォーカスにする
 
-        // 前回選択オブジェクト更新用として選択状態にしたオブジェクトを返す
+        // 選択状態にしたオブジェクトを返す
         return target;
     }
 
@@ -35,7 +35,7 @@ public static class UIUtils
         // 現在フォーカスになっているボタンを取得する
         GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
 
-        // 現在選択中が無い、もしくは前回選択と同じ場合は処理を終了。
+        // 現在選択中が無いもしくは前回選択と同じ場合は処理を終了する
         if(currentSelected == null || currentSelected == lastSelected) return;
         
         // 初期フォーカス以外は移動音を鳴らす

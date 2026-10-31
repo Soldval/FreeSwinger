@@ -3,7 +3,7 @@
 using UnityEngine;
 
 /// <summary>
-/// BGMやSEの再生を管理するクラス
+/// BGMやSEの再生を管理する共通クラス
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
@@ -39,7 +39,7 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        // AudioManagerのinstanceはシングルトンとして扱う
+        // AudioManagerのインスタンスはシングルトン
         if(instance == null)
         {
             instance = this;

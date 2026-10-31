@@ -45,6 +45,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform chargeLeftElbowHint;
     [SerializeField][Range(0, 1)] private float LeftIkWeight = 1.0f;
 
+    [Header("バットヒット制御用")]
+    [SerializeField] private BatHitController batHitController;
+
     [Header("トレイル設定")]
     //[SerializeField] private BatTrailMesh batTrailMesh;
     [SerializeField] private TrailRenderer batTrailRendererTop;
@@ -217,6 +220,7 @@ public class PlayerController : MonoBehaviour
     {
         isCharging = false;
         isSwinging = true;
+        bool isMaxCharged = (chargeTimer >= chargeThreshold);
 
         AudioManager.PlaySELeftSwing();
 
@@ -237,11 +241,17 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("IsCharging", false);
         }
+
+        // バットのコライダーをONにする
+        if(batHitController != null)
+        {
+            batHitController.EnableCollider(isMaxCharged);
+        }
         
         // EffectController側のスイングエフェクト開始メソッドを呼び出す
         if(effectController != null)
         {
-            bool isMaxCharged = (chargeTimer >= chargeThreshold);
+            //bool isMaxCharge = (chargeTimer >= chargeThreshold);
             effectController.StartSwingEffect(isMaxCharged);
         }
 
@@ -276,6 +286,12 @@ public class PlayerController : MonoBehaviour
 
         isSwinging = false;
         isCharging = false;
+
+        // バットのコライダーをOFFにする
+        if(batHitController != null)
+        {
+            batHitController.DisableCollider();
+        }
 
         // コルーチンが走っていれば停止
         if(autoEndSwingCoroutine != null)

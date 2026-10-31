@@ -3,7 +3,7 @@
 using UnityEngine;
 
 /// <summary>
-/// バットで飛ばされたモノが何かに衝突したら消滅するクラス
+/// バットで飛ばされたオブジェクトに関係するクラス
 /// </summary>
 public class ObjectDestructor : MonoBehaviour
 {
@@ -14,6 +14,10 @@ public class ObjectDestructor : MonoBehaviour
     [Header("巻き込みエフェクト設定")]
     [SerializeField] private float explosionRadius = 3.0f;
     [SerializeField] private float explosionForce = 10.0f;
+
+    [Header("加算スコア設定")]
+    [SerializeField] private int explodeScore = 2000;
+    [SerializeField] private int chainBreakScore = 5000;
 
     // 内部変数
     private bool hasBeenHit = false;
@@ -28,7 +32,7 @@ public class ObjectDestructor : MonoBehaviour
     }
 
     /// <summary>
-    /// 飛ばされたモノが何かに衝突した時に消滅させる処理
+    /// 飛ばされたオブジェクトが何かに衝突した時に爆破消滅させる処理
     /// </summary>
     /// <param name="collision">ぶつかった何か</param>
     private void OnCollisionEnter(Collision collision)
@@ -38,15 +42,21 @@ public class ObjectDestructor : MonoBehaviour
         // プレイヤー自身やバットに当たった場合は無視
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.name.Contains("bat")) return;
 
-        // 自分が直撃して爆発した場合の処理を呼び出す
-        Explode(false);
+        // スコア加算する
+        if (GameScore.Instance != null)
+        {
+            GameScore.Instance.AddScore(explodeScore);
+        }
+
+        // 自分が何かに直撃した場合、爆発エフェクト処理を実行する。
+        ExplodeAndChainBreak(false);
      }
 
     /// <summary>
-    /// 爆発を実行する処理
+    /// 爆発エフェクト実行と巻き込み消滅判定の処理
     /// </summary>
-    /// <param name="isChained"></param>
-    public void Explode(bool isChained)
+    /// <param name="isChained">連鎖状態(巻き込み)</param>
+    public void ExplodeAndChainBreak(bool isChained)
     {
         if (isDestroyed) return;
         isDestroyed = true;
@@ -61,14 +71,14 @@ public class ObjectDestructor : MonoBehaviour
             Instantiate(breakEffectPrefab, transform.position, Quaternion.identity);
         }
 
-        // もし自分が直撃した側の爆発ならば、周囲のオブジェクトをさらに巻き込んで飛ばす
+        // もし自身オブジェクトが直撃爆発ならば、周囲のオブジェクトをさらに巻き込んで飛ばし消滅させる。
         if(!isChained)
         {
-            // 爆風の範囲内にいる周囲オブジェクトを巻き込んで飛ばして消す
+            // ---- 爆風の範囲内にいる周囲オブジェクトを巻き込み飛ばして消滅させる
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
             foreach (Collider hitCollider in colliders)
             {
-                // 自分自身オブジェクトやプレイヤー、バットは巻き込み対象から除外
+                // 自分自身オブジェクト, プレイヤー, バットは巻き込み対象外
                 if (hitCollider.gameObject == gameObject ||
                     hitCollider.gameObject.CompareTag("Player") ||
                     hitCollider.name.Contains("bat"))
@@ -77,23 +87,29 @@ public class ObjectDestructor : MonoBehaviour
                 }
 
                 // 巻き込んだオブジェクトがRigidbodyを持っているか確認
+                // 持っていれば外側方向に飛ばす
                 Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
-                    // 外側に向かって力を加え吹き飛ばす
                     rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, 1.0f, ForceMode.Impulse);
                 }
 
-                // ObjectDestructorを持っているオブジェクトだけを連鎖破壊の対象にする
+                // ObjectDestructorを持っているオブジェクトのみを連鎖破壊対象にする
                 ObjectDestructor otherDestructor = hitCollider.GetComponent<ObjectDestructor>();
                 if (otherDestructor != null)
                 {
-                    otherDestructor.Explode(true);
+                    otherDestructor.ExplodeAndChainBreak(true);
                     Destroy(hitCollider.gameObject, 0.3f);
+                    // スコア加算する
+                    if (GameScore.Instance != null)
+                    {
+                        GameScore.Instance.AddScore(chainBreakScore);
+                    }
                 }
             }
         }
-        // 自分自身を消滅させる
+
+        // 自分自身オブジェクトを消滅させる
         Destroy(gameObject);
 
         Debug.Log(gameObject.name + " が破壊されました(連鎖爆発: " + isChained + ")");

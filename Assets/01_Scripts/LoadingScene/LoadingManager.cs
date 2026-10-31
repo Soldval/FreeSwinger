@@ -96,7 +96,7 @@ public class LoadingManager : MonoBehaviour
     }
 
     /// <summary>
-    /// このオブジェクト破棄時、Tweenを安全停止させる処理。
+    /// LoadingManager破棄時にTweenを安全停止させる処理
     /// </summary>
     private void OnDestroy()
     {

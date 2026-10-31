@@ -4,10 +4,11 @@ using UnityEngine;
 using System;
 
 /// <summary>
-/// ランキングデータを管理するクラス
+/// ランキングデータを管理する共通クラス
 /// </summary>
 public class RankingDataStore : MonoBehaviour
 {
+    // インスタンス(シングルトン)
     public static RankingDataStore Instance;
 
     // ランキングデータの保存配列
@@ -17,7 +18,7 @@ public class RankingDataStore : MonoBehaviour
 
     void Awake()
     {
-        // インスタンスはシングルトン
+        // RankingDataStoreのインスタンスはシングルトン
         if(Instance == null)
         {
             Instance = this;

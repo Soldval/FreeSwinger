@@ -1,7 +1,5 @@
 // BatHitController.cs
 
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -13,20 +11,78 @@ public class BatHitController : MonoBehaviour
     [SerializeField] private float hitPower = 15.0f;
     [SerializeField] private float upwardPower = 15.0f;
 
+    [Header("バットのコライダー設定")]
+    [SerializeField] private Collider leftSwingCollider;
+    [SerializeField] private Collider chargeLeftSwingCollider;
+
     [Header("加算スコア設定")]
-    [SerializeField] private int hitScore = 100;
+    [SerializeField] private int hitScore = 1000;
+
+    void Awake()
+    {
+        // バットのコライダーをOFFにする
+        DisableCollider();
+    }
 
     /// <summary>
-    /// バットのcolliderが他オブジェクトに衝突した瞬間に呼ばれる処理
+    /// バットのコライダーを有効化する処理
     /// </summary>
-    /// <param name="collision">衝突した側のcollision</param>
+    /// <param name="isMaxCharged">最大チャージ状態</param>
+    public void EnableCollider(bool isMaxCharged)
+    {
+        if(isMaxCharged)
+        {
+            // 最大チャージ時はチャージスイングコライダーをON
+            if(chargeLeftSwingCollider != null)
+            {
+                chargeLeftSwingCollider.enabled = true;
+            }
+            if(leftSwingCollider != null)
+            {
+                leftSwingCollider.enabled = false;
+            }
+        }
+        else
+        {
+            // 通常チャージ時は通常スイングコライダーをON
+            if (chargeLeftSwingCollider != null)
+            {
+                chargeLeftSwingCollider.enabled = false;
+            }
+            if (leftSwingCollider != null)
+            {
+                leftSwingCollider.enabled = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// バットのコライダーを無効化する処理
+    /// </summary>
+    public void DisableCollider()
+    {
+        // チャージスイング・通常スイングのコライダー両方をOFF
+        if(chargeLeftSwingCollider != null)
+        {
+            chargeLeftSwingCollider.enabled = false;
+        }
+        if (leftSwingCollider != null)
+        {
+            leftSwingCollider.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// バットのコライダーが他オブジェクトに衝突した瞬間に呼ばれる処理
+    /// </summary>
+    /// <param name="collision">衝突した側のコリジョン</param>
     private void OnCollisionEnter(Collision collision)
     {
-        // 衝突した側のオブジェクトがRigidbodyを持っているか確認する
+        // 衝突した側がRigidbodyを持っているか確認する
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
         if (rb == null) return;
 
-        // ObjectDestructorが付いている場合、「打たれたよ」と伝える。
+        // ObjectDestructorが付いている場合、打たれた処理を行う。
         ObjectDestructor destructor = collision.gameObject.GetComponent<ObjectDestructor>();
         if(destructor != null)
         {
@@ -46,7 +102,7 @@ public class BatHitController : MonoBehaviour
         Vector3 randomtorque = new Vector3(UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f)) * 50f;
         rb.AddTorque(randomtorque, ForceMode.Impulse);
 
-        // スコア加算
+        // スコア加算する
         if(GameScore.Instance != null)
         {
             GameScore.Instance.AddScore(hitScore);

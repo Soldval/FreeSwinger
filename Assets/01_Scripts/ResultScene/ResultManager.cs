@@ -47,9 +47,9 @@ public class ResultManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.StopBGM();
+        AudioManager.StopBGM();  // BGM停止
 
-        InitializeButtonsUI();
+        InitializeButtonsUI();  // ボタン群の初期化
 
         if(!isDebugMode)
         {
@@ -62,7 +62,7 @@ public class ResultManager : MonoBehaviour
             cachedFinalScore = debugScore;
         }
 
-        PlayResultSequence(cachedFinalScore);
+        PlayResultSequence(cachedFinalScore);  // リザルト演出シーケンス開始
     }
 
     void Update()
@@ -74,7 +74,7 @@ public class ResultManager : MonoBehaviour
     #region スコア・成績表示処理 ----
 
     /// <summary>
-    /// スコアのUI表示を更新する処理
+    /// スコアUI表示を更新する処理
     /// </summary>
     /// <param name="score">スコア値</param>
     private void UpdateScoreUI(int score)
@@ -85,7 +85,7 @@ public class ResultManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 最終スコアによる成績画像をUI_Imageにセットする処理
+    /// 最終スコアから成績画像をUI_Imageにセットする処理
     /// </summary>
     /// <param name="score">最終スコア</param>
     private void UpdateGradeImageByScore(int score)
@@ -159,116 +159,18 @@ public class ResultManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 一連のリザルト演出(スコアカウントアップ → 成績表示 → ボタン表示)の処理
+    /// スコアからGradeTypeを取得する処理
     /// </summary>
-    /// <param name="targetScore">最終スコア</param>
-    private void PlayResultSequence(int targetScore)
-    {
-        // 成績画像を非表示する
-        if (imageGrade != null)
-        {
-            imageGrade.sprite = clearSprite;
-            imageGrade.enabled = (clearSprite != null);
-            imageGrade.transform.localScale = Vector3.zero;  // 拡大率を0にする
-        }
-
-        KillAllTweens();
-
-        if (targetScore > 0)
-        {
-            AudioManager.PlaySECountUp();  // カウントアップ効果音を再生
-        }
-
-        // 【ステップ1】スコアのカウントアップ演出
-        countUpTween = DOVirtual.Float(0f, targetScore, countUpDuration, value =>
-        {
-            UpdateScoreUI(Mathf.FloorToInt(value));
-        })
-        .SetEase(countUpEase)
-        .OnComplete(() =>
-        {
-            UpdateScoreUI(targetScore);
-
-            // カウントアップが完了したタイミングでランキングの判定・保存を行う
-            if(RankingDataStore.Instance != null)
-            {
-                // スコアから成績を判別して取得するメソッドを呼ぶか判定を行う
-                GradeType achievedGrade = GetGradeTypeByScore(targetScore);
-
-                int registeredRank = RankingDataStore.Instance.CheckAndRegisterRanking(targetScore, achievedGrade);
-                if(registeredRank >= 0)
-                {
-                    Debug.Log($"{registeredRank + 1}位にランクインしました！");
-                }
-            }
-        });
-
-        // シーケンス演出の構築
-        resultSequence = DOTween.Sequence();
-
-        // カウントアップ完了まで待つ
-        resultSequence.Append(countUpTween);
-
-        // 【ステップ2】成績画像の表示
-        resultSequence.AppendCallback(() =>
-        {
-            if (targetScore >= 60000)
-            {
-                AudioManager.PlaySEHighGrade();
-            }
-            else if (targetScore >= 20000)
-            {
-                AudioManager.PlaySEMiddleGrade();
-            }
-            else
-            {
-                AudioManager.PlaySELowGrade();
-            }
-
-            UpdateGradeImageByScore(targetScore);
-        });
-
-        if (imageGrade != null)
-        {
-            // 画像が少し跳ねるアニメーション
-            resultSequence.Append(imageGrade.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));
-        }
-
-        resultSequence.AppendCallback(() =>
-        {
-            if (targetScore >= 60000)
-            {
-                AudioManager.PlaySECheer();
-            }
-            else if (targetScore >= 20000)
-            {
-                AudioManager.PlaySEApplause();
-            }
-        });
-
-        // 少しだけ余韻
-        resultSequence.AppendInterval(0.2f);
-
-        // 【ステップ3】ボタン群のフェードインとフォーカス
-        resultSequence.AppendCallback(() =>
-        {
-            ShowButtons();
-        });
-    }
-
-    /// <summary>
-    /// スコアからGradeTypeを割り出す処理
-    /// </summary>
-    /// <param name="score"></param>
+    /// <param name="score">スコア値</param>
     /// <returns></returns>
     private GradeType GetGradeTypeByScore(int score)
     {
         if (score >= 100000) return GradeType.MVPSlugger;
-        if (score >= 80000)  return GradeType.GoldSlugger;
-        if (score >= 60000)  return GradeType.SliverSlugger;
-        if (score >= 40000)  return GradeType.MainSlugger;
-        if (score >= 20000)  return GradeType.Moudasyo;
-        if (score >= 0)      return GradeType.LightHitter;
+        if (score >= 80000) return GradeType.GoldSlugger;
+        if (score >= 60000) return GradeType.SliverSlugger;
+        if (score >= 40000) return GradeType.MainSlugger;
+        if (score >= 20000) return GradeType.Moudasyo;
+        if (score >= 0) return GradeType.LightHitter;
         return GradeType.None;
     }
 
@@ -338,6 +240,105 @@ public class ResultManager : MonoBehaviour
     #region その他処理 ----
 
     /// <summary>
+    /// 一連のリザルト演出(スコアカウントアップ → 成績表示 → ボタン表示)の処理
+    /// </summary>
+    /// <param name="targetScore">最終スコア</param>
+    private void PlayResultSequence(int targetScore)
+    {
+        // 成績画像を非表示する
+        if (imageGrade != null)
+        {
+            imageGrade.sprite = clearSprite;
+            imageGrade.enabled = (clearSprite != null);
+            imageGrade.transform.localScale = Vector3.zero;  // 拡大率を0にする
+        }
+
+        KillAllTweens();
+
+        if (targetScore > 0)
+        {
+            AudioManager.PlaySECountUp(); // スコアカウントアップのSE
+        }
+
+        // ---- 【ステップ1】スコアのカウントアップ演出
+        countUpTween = DOVirtual.Float(0f, targetScore, countUpDuration, value =>
+        {
+            UpdateScoreUI(Mathf.FloorToInt(value));
+        })
+        .SetEase(countUpEase)
+        .OnComplete(() =>
+        {
+            UpdateScoreUI(targetScore);  // 最終スコアのUI表示を更新する
+
+            // カウントアップが完了したタイミングでランキングの判定・保存を行う
+            if (RankingDataStore.Instance != null)
+            {
+                // スコアから成績を判別し、ランキング更新する処理を呼ぶのか判断する。
+                GradeType achievedGrade = GetGradeTypeByScore(targetScore);
+
+                int registeredRank = RankingDataStore.Instance.CheckAndRegisterRanking(targetScore, achievedGrade);
+                if (registeredRank >= 0)
+                {
+                    Debug.Log($"{registeredRank + 1}位にランクインしました！");
+                }
+            }
+        });
+
+        // シーケンス演出の構築
+        resultSequence = DOTween.Sequence();
+
+        // カウントアップ完了まで待機
+        resultSequence.Append(countUpTween);
+
+        // ---- 【ステップ2】成績画像の表示
+        resultSequence.AppendCallback(() =>
+        {
+            // 成績によってグレードSEを変える
+            if (targetScore >= 60000)
+            {
+                AudioManager.PlaySEHighGrade();
+            }
+            else if (targetScore >= 20000)
+            {
+                AudioManager.PlaySEMiddleGrade();
+            }
+            else
+            {
+                AudioManager.PlaySELowGrade();
+            }
+
+            UpdateGradeImageByScore(targetScore);  // 最終スコアから成績画像をセットする
+        });
+
+        if (imageGrade != null)
+        {
+            // 画像が少し跳ねるアニメーション
+            resultSequence.Append(imageGrade.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack));
+        }
+
+        resultSequence.AppendCallback(() =>
+        {
+            if (targetScore >= 60000)
+            {
+                AudioManager.PlaySECheer();
+            }
+            else if (targetScore >= 20000)
+            {
+                AudioManager.PlaySEApplause();
+            }
+        });
+
+        // 少しだけ待機
+        resultSequence.AppendInterval(0.2f);
+
+        // ---- 【ステップ3】ボタン群のフェードインとフォーカス
+        resultSequence.AppendCallback(() =>
+        {
+            ShowButtons();
+        });
+    }
+
+    /// <summary>
     /// 全てのTweenを破棄する処理
     /// </summary>
     private void KillAllTweens()
@@ -347,7 +348,7 @@ public class ResultManager : MonoBehaviour
     }
 
     /// <summary>
-    /// このオブジェクト破棄の時、全てのTweenを破棄する処理。
+    /// ResultManager破棄時に全てのTweenを破棄する処理
     /// </summary>
     private void OnDestroy()
     {

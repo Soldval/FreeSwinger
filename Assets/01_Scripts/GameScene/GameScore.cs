@@ -3,15 +3,13 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
-using Unity.VisualScripting;
-using System;
 
 /// <summary>
 /// ゲームシーンのスコア管理用クラス
 /// </summary>
 public class GameScore : MonoBehaviour
 {
-    // 他スクリプトからアクセス可能にするインスタンス
+    // インスタンス(シングルトン)
     public static GameScore Instance;
 
     [Header("参照するUI")]
@@ -29,7 +27,7 @@ public class GameScore : MonoBehaviour
 
     void Awake()
     {
-        // インスタンス設定(シングルトン)
+        // GameScoreのインスタンスはシングルトン
         if(Instance == null)
         {
             Instance = this;
@@ -42,12 +40,14 @@ public class GameScore : MonoBehaviour
 
     void Start()
     {
+        // 初期処理として現在スコア(0)をスコア表示に反映させる
         displayScore = currentScore;
-        UpdateScoreUI(displayScore);
+        UpdateScoreUI(displayScore); 
     }
 
     void Update()
     {
+        // ---- デバッグ用
         // 「Eキー」押下で+1000pt
         if(Input.GetKeyDown(KeyCode.E))
         {
@@ -62,7 +62,7 @@ public class GameScore : MonoBehaviour
     }
 
     /// <summary>
-    /// スコアの加算と表示更新する処理
+    /// スコア加算・表示更新する処理
     /// </summary>
     /// <param name="amount">加算する値</param>
     public void AddScore(int amount)
@@ -75,7 +75,7 @@ public class GameScore : MonoBehaviour
     }
 
     /// <summary>
-    /// 現在スコア値を取得する処理
+    /// 現在スコアを取得する処理
     /// </summary>
     /// <returns>現在スコア値 int</returns>
     public int GetCurrentScore()
@@ -86,6 +86,7 @@ public class GameScore : MonoBehaviour
     /// <summary>
     /// スコア表示を更新する処理
     /// </summary>
+    /// <returns>更新スコア値 int</returns>
     private void UpdateScoreUI(int score)
     {
         if (txtScore == null) return;
@@ -94,9 +95,14 @@ public class GameScore : MonoBehaviour
         txtScore.text = string.Format("{0:N0}" + "pt", score);
     }
 
+    /// <summary>
+    /// スコアのカウントアップ演出処理
+    /// </summary>
+    /// <param name="fromScore">前回スコア値 int</param>
+    /// <param name="toScore">更新スコア値 int</param>
     private void AnimateScore(int fromScore, int toScore)
     {
-        // すでにアニメーション中であれば、一度停止して競合を防ぐ
+        // すでにアニメーション中であれば、一度停止して競合を防ぐ。
         if(scoreTween != null && scoreTween.IsActive())
         {
             scoreTween.Kill();
@@ -104,10 +110,10 @@ public class GameScore : MonoBehaviour
 
         // fromScoreからtoScoreまで一定時間かけて数値を変化させる
         scoreTween = DOVirtual.Int(fromScore, toScore, countUpDuration, (value) =>
-                     {
-                         displayScore = value;
-                         UpdateScoreUI(displayScore);
-                     })
-                     .SetEase(Ease.OutQuad);
+        {
+            displayScore = value;
+            UpdateScoreUI(displayScore);
+        })
+        .SetEase(Ease.OutQuad);
     }
 }
