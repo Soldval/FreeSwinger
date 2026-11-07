@@ -8,28 +8,27 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    [Header("ゲームシーンで流すBGM")]
+    [Header("ゲームシーンのBGM")]
     [SerializeField] private AudioClip gameBGM;
 
     [Header("HUD関連")]
     [SerializeField] private GameObject HUD;  // HUD(タイム, スコア, マップ)
 
-    [Header("スコア関連")]
-    [SerializeField] private GameScore gameScore;  // スコア管理クラスを参照
+    [Header("gameScoreの参照用")]
+    [SerializeField] private GameScore gameScore;
 
     [Header("タイマー関連")]
     [SerializeField] private GameTimer gameTimer;
 
     [Header("ポーズウィンドウ関連")]
-    [SerializeField] private GameObject pauseWindow;  // ポーズウィンドウ
-    [SerializeField] private GameObject pauseFirstSelectionButton;  // ポーズウィンドウ開始時に選択されるボタン
+    [SerializeField] private GameObject pauseWindow;
+    [SerializeField] private GameObject pauseFirstSelectionButton;
 
     [Header("デバッグ用設定")]
-    [SerializeField] private bool isDebugMode = true;  // デバッグモード
+    [SerializeField] private bool isDebugMode = true;
 
-    // 内部変数リスト
+    // 内部変数
     private GameObject lastSelectedObject;
-
     private bool isPaused = false;
     private bool isTimeUp = false;
 
@@ -37,7 +36,7 @@ public class GameManager : MonoBehaviour
     {
         AudioManager.PlayBGM(gameBGM);
         SetHUDActive(true);
-        ResumeGame();  // ポーズを解除する
+        ResumeGame();
     }
 
     void Update()
@@ -45,39 +44,36 @@ public class GameManager : MonoBehaviour
         // タイムアップ時は他の入力を受け付けない
         if (isTimeUp) return;
 
-        // デバッグモード時の処理
+        // ---- デバッグモード時の処理
         // Zキー押下でリザルトシーンに移動する
-        if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
-        {
-            if(gameTimer != null)
-            {
-                gameTimer.ForceTimeUp();
-            }
-            else
-            {
-                GoToResultScene();
-            }
-        }
+        //if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    if(gameTimer != null)
+        //    {
+        //        gameTimer.ForceTimeUp();
+        //    }
+        //    else
+        //    {
+        //        GoToResultScene();
+        //    }
+        //}
 
         // Escキーが押された場合
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(isPaused) // ポーズ中ならポーズを解除する
+            if(isPaused)
             {
                 ResumeGame();
             }
-            else  // ポーズ中でないならポーズ状態にする
+            else
             {
                 PauseGame();
-                // 選択ボタンの設定
                 lastSelectedObject = UIUtils.SetFocusWithoutSound(pauseFirstSelectionButton);
             }
         }
 
-        // ポーズ中の場合
         if(isPaused)
         {
-            // キーボードやゲームパッド操作によるボタン移動を監視し移動音を鳴らす
             UIUtils.HandleselectionChangeSE(ref lastSelectedObject);
         }
     }
@@ -94,7 +90,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SetHUDActive(false);
 
-        // 現在スコアをPlayerPrefsに保存
         if(gameScore != null)
         {
             int currentScore = gameScore.GetCurrentScore();
@@ -112,7 +107,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// HUDの表示/非表示を操作する処理
     /// </summary>
-    /// <param name="isActive"></param>
+    /// <param name="isActive">「表示 or 非表示」の状態</param>
     public void SetHUDActive(bool isActive)
     {
         if(HUD != null)
@@ -150,7 +145,7 @@ public class GameManager : MonoBehaviour
     public void OnContinueButtonPress()
     {
         AudioManager.PlaySESubmit();
-        ResumeGame();  // ポーズを解除する
+        ResumeGame();
     }
 
     /// <summary>

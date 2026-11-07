@@ -2,7 +2,6 @@
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using DG.Tweening;
@@ -15,8 +14,6 @@ public class LoadingManager : MonoBehaviour
     [Header("参照するUI一覧")]
     [SerializeField] private TextMeshProUGUI txtLoading;  // 「ロード中」テキスト
     [SerializeField] private RectTransform loadingIcon;  // 円形アイコン
-    [SerializeField] private Slider progressBar;  // 進捗バー(使用していない)
-    [SerializeField] private TextMeshProUGUI txtPercent;  // 「〇〇%」テキスト(使用していない)
     
     [Header("設定一覧")]
     [SerializeField] private float minLoadingTime = 1.5f;  // 最低表示時間
@@ -44,7 +41,6 @@ public class LoadingManager : MonoBehaviour
                 .SetLoops(-1, LoopType.Restart);
         }
 
-        // 非同期ロード開始
         StartCoroutine(LoadNextSceneCoroutine());
     }
 
@@ -74,17 +70,6 @@ public class LoadingManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // asyncLoad.progressは 0.0～0.9 の値をとる(使用していない)
-            // float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-
-            // 最低表示時間を考慮した進捗率の計算(使用していない)
-            // float timeProgress = Mathf.Clamp01(timer / minLoadingTime);
-            // float currentProgress = Mathf.Min(targetProgress, timeProgress);
-
-            // UIの更新(使用していない)
-            //if (progressBar != null) progressBar.value = currentProgress;
-            //if(txtPercent != null) txtPercent.text = (currentProgress * 100f).ToString("F0") + "%";
-
             // ロードが完了し最低表示時間も経過した場合、シーン切替を許可する。
             if(asyncLoad.progress >= 0.9f && timer >= minLoadingTime)
             {
@@ -96,7 +81,7 @@ public class LoadingManager : MonoBehaviour
     }
 
     /// <summary>
-    /// LoadingManager破棄時にTweenを安全停止させる処理
+    /// LoadingManager破棄時にTweenを破棄する処理
     /// </summary>
     private void OnDestroy()
     {

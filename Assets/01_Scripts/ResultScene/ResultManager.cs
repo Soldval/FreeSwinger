@@ -4,6 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System;
+
+/// <summary>
+/// スコア閾値と対応する成績種類データ
+/// </summary>
+[Serializable]
+public struct GradeThresholdData
+{
+    [Header("スコア閾値")]
+    public int thresholdScore;
+    [Header("対応する成績種類")]
+    public GradeType gradeType;
+}
 
 /// <summary>
 /// リザルトシーン全体を管理するクラス
@@ -17,8 +30,20 @@ public class ResultManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ResultScore;
 
     [Header("スコアのカウントアップ演出設定")]
-    [SerializeField] private float countUpDuration = 1.25f;  // カウントアップにかかる時間
-    [SerializeField] private Ease countUpEase = Ease.OutExpo;  // 減速アニメーションのイージング
+    [SerializeField] private float countUpDuration = 1.25f;
+    [SerializeField] private Ease countUpEase = Ease.OutExpo;
+
+    [Header("各成績種類のスコア閾値設定")]
+    [SerializeField]
+    private GradeThresholdData[] gradeThresholds = new GradeThresholdData[]
+    {
+        new GradeThresholdData {thresholdScore = 100000, gradeType = GradeType.MVPSlugger },
+        new GradeThresholdData {thresholdScore = 80000, gradeType = GradeType.GoldSlugger },
+        new GradeThresholdData {thresholdScore = 60000, gradeType = GradeType.SliverSlugger },
+        new GradeThresholdData {thresholdScore = 40000, gradeType = GradeType.MainSlugger },
+        new GradeThresholdData {thresholdScore = 20000, gradeType = GradeType.Moudasyo },
+        new GradeThresholdData {thresholdScore = 0, gradeType = GradeType.LightHitter }
+    };
 
     [Header("各成績画像のデータ設定")]
     [SerializeField] private GradeImageData[] gradeImageDatas;
@@ -47,27 +72,23 @@ public class ResultManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.StopBGM();  // BGM停止
-
-        InitializeButtonsUI();  // ボタン群の初期化
+        AudioManager.StopBGM();
+        InitializeButtonsUI();
 
         if(!isDebugMode)
         {
-            // 通常時の処理
             cachedFinalScore = PlayerPrefs.GetInt("FINAL_SCORE", 0);
         }
         else
         {
-            // デバッグモード時の処理
             cachedFinalScore = debugScore;
         }
 
-        PlayResultSequence(cachedFinalScore);  // リザルト演出シーケンス開始
+        PlayResultSequence(cachedFinalScore);
     }
 
     void Update()
     {
-        // キーボードやゲームパッド操作によるボタン移動を監視し移動音を鳴らす
         UIUtils.HandleselectionChangeSE(ref lastSelectedObject);
     }
 
@@ -90,47 +111,18 @@ public class ResultManager : MonoBehaviour
     /// <param name="score">最終スコア</param>
     private void UpdateGradeImageByScore(int score)
     {
-        Sprite targetSprite;  // 画像データの一時的な保存用
+        Sprite targetSprite;
+        GradeType achievedGrade = GetGradeTypeByScore(score);
 
-        // 最終スコアに応じた画像データを一時保存に入れる
-        if(score >= 100000)
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.MVPSlugger);
-        }
-        else if(score >= 80000)
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.GoldSlugger);
-        }
-        else if(score >= 60000)
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.SliverSlugger);
-        }
-        else if(score >= 40000)
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.MainSlugger);
-        }
-        else if(score >= 20000)
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.Moudasyo);
-        }
-        else if(score >= 0)
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.LightHitter);
-        }
-        else
-        {
-            targetSprite = GetSpriteByGradeType(GradeType.None);
-        }
+        targetSprite = GetSpriteByGradeType(achievedGrade);
 
         if(targetSprite != null && targetSprite != clearSprite)
         {
-            // 見つけてきた画像データを画像表示用UIに入れUI表示をONにする
             imageGrade.sprite = targetSprite;
             imageGrade.enabled = true;
         }
         else
         {
-            // 透明画像の場合の処理
             imageGrade.sprite = clearSprite;
             imageGrade.enabled = (clearSprite != null);
         }
@@ -145,7 +137,6 @@ public class ResultManager : MonoBehaviour
     {
         if (type == GradeType.None || gradeImageDatas == null) return clearSprite;
 
-        // 成績種類に応じた画像データを返す
         foreach(var data in gradeImageDatas)
         {
             if(data.gradeType == type)
@@ -154,7 +145,6 @@ public class ResultManager : MonoBehaviour
             }
         }
 
-        // 見つからない場合は透明画像を返す
         return clearSprite;
     }
 
@@ -165,12 +155,16 @@ public class ResultManager : MonoBehaviour
     /// <returns></returns>
     private GradeType GetGradeTypeByScore(int score)
     {
-        if (score >= 100000) return GradeType.MVPSlugger;
-        if (score >= 80000) return GradeType.GoldSlugger;
-        if (score >= 60000) return GradeType.SliverSlugger;
-        if (score >= 40000) return GradeType.MainSlugger;
-        if (score >= 20000) return GradeType.Moudasyo;
-        if (score >= 0) return GradeType.LightHitter;
+        if(gradeThresholds == null || gradeThresholds.Length == 0) return GradeType.None;
+
+        foreach(var threshold in gradeThresholds)
+        {
+            if(score >= threshold.thresholdScore)
+            {
+                return threshold.gradeType;
+            }
+        }
+
         return GradeType.None;
     }
 
@@ -208,7 +202,7 @@ public class ResultManager : MonoBehaviour
         }
         else
         {
-            // CanvasGroupがない場合のフォールバック
+            // フォールバック
             lastSelectedObject = UIUtils.SetFocusWithoutSound(resultFirstSelectionButton);
         }
     }
@@ -255,9 +249,10 @@ public class ResultManager : MonoBehaviour
 
         KillAllTweens();
 
-        if (targetScore > 0)
+        // スコアが0以上だったらカウントアップSEを鳴らす
+        if (targetScore > gradeThresholds[5].thresholdScore)
         {
-            AudioManager.PlaySECountUp(); // スコアカウントアップのSE
+            AudioManager.PlaySECountUp();
         }
 
         // ---- 【ステップ1】スコアのカウントアップ演出
@@ -268,7 +263,7 @@ public class ResultManager : MonoBehaviour
         .SetEase(countUpEase)
         .OnComplete(() =>
         {
-            UpdateScoreUI(targetScore);  // 最終スコアのUI表示を更新する
+            UpdateScoreUI(targetScore);
 
             // カウントアップが完了したタイミングでランキングの判定・保存を行う
             if (RankingDataStore.Instance != null)
@@ -284,21 +279,19 @@ public class ResultManager : MonoBehaviour
             }
         });
 
-        // シーケンス演出の構築
         resultSequence = DOTween.Sequence();
 
-        // カウントアップ完了まで待機
         resultSequence.Append(countUpTween);
 
         // ---- 【ステップ2】成績画像の表示
         resultSequence.AppendCallback(() =>
         {
             // 成績によってグレードSEを変える
-            if (targetScore >= 60000)
+            if (targetScore >= gradeThresholds[2].thresholdScore)
             {
                 AudioManager.PlaySEHighGrade();
             }
-            else if (targetScore >= 20000)
+            else if (targetScore >= gradeThresholds[4].thresholdScore)
             {
                 AudioManager.PlaySEMiddleGrade();
             }
@@ -307,7 +300,7 @@ public class ResultManager : MonoBehaviour
                 AudioManager.PlaySELowGrade();
             }
 
-            UpdateGradeImageByScore(targetScore);  // 最終スコアから成績画像をセットする
+            UpdateGradeImageByScore(targetScore); 
         });
 
         if (imageGrade != null)
@@ -328,7 +321,6 @@ public class ResultManager : MonoBehaviour
             }
         });
 
-        // 少しだけ待機
         resultSequence.AppendInterval(0.2f);
 
         // ---- 【ステップ3】ボタン群のフェードインとフォーカス

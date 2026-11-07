@@ -4,19 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// トレイルやエフェクトを管理するクラス
+/// メッシュやエフェクトを管理するクラス
 /// </summary>
 public class EffectController : MonoBehaviour
 {
-    [Header("トレイル参照設定")]
-    [SerializeField] private Transform topPoint;
-    [SerializeField] private Transform underPoint;
-
-    [Header("通常スイングのトレイル設定")]
-    [SerializeField] private Material normalMaterial;
-    [SerializeField] private float normalThickness = 0.5f;
-
-    [Header("チャージスイングのトレイル設定")]
+    [Header("チャージスイングのメッシュ設定")]
     [SerializeField] private Material chargeMaterial;
     [SerializeField] private float chargeThickness = 1.2f;
 
@@ -25,11 +17,19 @@ public class EffectController : MonoBehaviour
     [SerializeField] private GameObject maxChargeEffectPrefab;
     [SerializeField] private Transform effectSpawnPoint;
 
-    [Header("その他トレイル設定")]
+    [Header("バットのメッシュ参照設定")]
+    [SerializeField] private Transform topPoint;
+    [SerializeField] private Transform underPoint;
+
+    [Header("通常スイングのメッシュ設定")]
+    [SerializeField] private Material normalMaterial;
+    [SerializeField] private float normalThickness = 0.5f;
+
+    [Header("その他メッシュ設定")]
     [SerializeField] private int maxVertexCount = 20;
     [SerializeField] private float minEmitDistance = 0.05f;
 
-    // 内部変数(トレイル用)
+    // 内部変数(メッシュ用)
     private MeshFilter meshFilter;
     private MeshRenderer meshRenderer;
     private Mesh trailMesh;
@@ -51,22 +51,20 @@ public class EffectController : MonoBehaviour
         {
             meshFilter = gameObject.AddComponent<MeshFilter>();
         }
-
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         if(meshRenderer == null)
         {
             meshRenderer = gameObject.AddComponent<MeshRenderer>();
         }
 
-        // 初期マテリアル設定
         if(normalMaterial != null)
         {
             meshRenderer.material = normalMaterial;
         }
 
+        // メッシュの初期化
         trailMesh = new Mesh();
         meshFilter.mesh = trailMesh;
-
         if(effectSpawnPoint == null)
         {
             effectSpawnPoint = transform;
@@ -75,6 +73,7 @@ public class EffectController : MonoBehaviour
 
     void LateUpdate()
     {
+        // メッシュの削除(トレイル未設定や古いトレイルが残っている場合)
         if(!isEmitting || topPoint == null || underPoint == null)
         {
             if(trailMesh.vertexCount > 0)
@@ -84,16 +83,16 @@ public class EffectController : MonoBehaviour
             return;
         }
 
-        // 一定距離動いたら新しい頂点を記憶する
         Vector3 currentTop = topPoint.position;
         Vector3 currentUnder = underPoint.position;
 
+        // ---- 履歴がまだ0もしくは直近で記録した履歴が一定距離移動しているかを判定
+        // 少しの移動で大量データ作成されることを防ぐ
         if(topHistory.Count == 0 || Vector3.Distance(topHistory[0], currentTop) > minEmitDistance)
         {
             topHistory.Insert(0, currentTop);
             underHistory.Insert(0, currentUnder);
 
-            // 最大数超えたら古いものを削除する
             if(topHistory.Count > maxVertexCount)
             {
                 topHistory.RemoveAt(topHistory.Count - 1);
@@ -101,12 +100,13 @@ public class EffectController : MonoBehaviour
             }
         }
 
-        // 履歴が2つ以上あればメッシュを構築する
         if(topHistory.Count >= 2)
         {
             BuildMesh();
         }
     }
+
+    #region チャージ関係の処理 ----
 
     /// <summary>
     /// チャージ開始時のエフェクト処理
@@ -115,7 +115,9 @@ public class EffectController : MonoBehaviour
     {
         wasMaxCharged = false;
         ClearEffects();
+        AudioManager.PlaySECharge();
 
+        // チャージエフェクトがアタッチされている位置情報でエフェクトを生成する
         if(normalChargeEffectPrefab != null)
         {
             activeNormalEffect = Instantiate(normalChargeEffectPrefab, effectSpawnPoint.position, effectSpawnPoint.rotation, effectSpawnPoint);
@@ -125,31 +127,35 @@ public class EffectController : MonoBehaviour
     /// <summary>
     /// チャージ中のフレーム更新
     /// </summary>
-    /// <param name="currentTimer"></param>
-    /// <param name="threshold"></param>
+    /// <param name="currentTimer">今のチャージ時間</param>
+    /// <param name="threshold">チャージ完了時間</param>
     public void UpdateChargeProgress(float currentTimer, float threshold)
     {
         if(!wasMaxCharged && currentTimer >= threshold)
         {
             wasMaxCharged = true;
 
-            // 通常チャージを消してマックスチャージ用エフェクトを生成
             if (activeNormalEffect != null)
             {
                 Destroy(activeNormalEffect);
             }
-             
             if(maxChargeEffectPrefab != null)
             {
+                AudioManager.PlaySEMaxCharge();
+                // マックスチャージエフェクトがアタッチされている位置情報でエフェクトを生成する
                 activeMaxEffect = Instantiate(maxChargeEffectPrefab, effectSpawnPoint.position, effectSpawnPoint.rotation, effectSpawnPoint);
             }
         }
     }
 
+    #endregion // チャージ関係の処理 ----
+
+    #region スイング関係の処理 ----
+
     /// <summary>
     /// スイング開始時の処理
     /// </summary>
-    /// <param name="isCharged"></param>
+    /// <param name="isCharged">チャージ状態</param>
     public void StartSwingEffect(bool isCharged)
     {
         ClearEffects();
@@ -159,6 +165,15 @@ public class EffectController : MonoBehaviour
         topHistory.Clear();
         underHistory.Clear();
 
+        if(!isCharged)
+        {
+            AudioManager.PlaySELeftSwing();
+        }
+        else
+        {
+            AudioManager.PlaySEChargeLeftSwing();
+        }
+
         if(meshRenderer != null)
         {
             meshRenderer.material = isCharged ? chargeMaterial : normalMaterial;
@@ -166,65 +181,33 @@ public class EffectController : MonoBehaviour
     }
 
     /// <summary>
-    /// すべてのエフェクトを停止・消去する
-    /// </summary>
-    public void StopAllEffects()
-    {
-        isEmitting = false;
-        isChargedTrail = false;
-        topHistory.Clear();
-        underHistory.Clear();
-        if(trailMesh != null)
-        {
-            trailMesh.Clear();
-        }
-
-        ClearEffects();
-    }
-
-    /// <summary>
-    /// 全てのエフェクトをクリアする処理
-    /// </summary>
-    private void ClearEffects()
-    {
-        if(activeNormalEffect != null)
-        {
-            Destroy(activeNormalEffect);
-            activeNormalEffect = null;
-        }
-
-        if(activeMaxEffect != null)
-        {
-            Destroy(activeMaxEffect);
-            activeMaxEffect= null;
-        }
-    }
-
-    /// <summary>
-    /// TopとUnderの軌跡を繋ぐMeshを生成する処理
+    /// スイング時にTopとUnderの軌跡を繋ぐMeshを生成する処理
     /// </summary>
     private void BuildMesh()
     {
-        int count = topHistory.Count;
-        Vector3[] vertices = new Vector3[count * 4];
-        Vector2[] uv = new Vector2[count * 4];
-        int[] triangles = new int[(count - 1) * 24];
+        // ---- メッシュ生成のためのメモリ確保
+        int count = topHistory.Count;  // 履歴の数
+        Vector3[] vertices = new Vector3[count * 4];  // 3Dの頂点配列(上側、下側、上側厚み、下側厚み)
+        Vector2[] uv = new Vector2[count * 4];  // UV座標配列(頂点数と一致させる)
+        int[] triangles = new int[(count - 1) * 24];  // 1つの頂点につき6個のインデックスが必要
 
-        // チャージ状態に応じてトレイル太さを切替える
+        // ---- チャージ状態に応じてトレイル太さを切替える
         float currentThickness = isChargedTrail ? chargeThickness : normalThickness;
         Vector3 thicknessOffset = new Vector3(currentThickness, currentThickness, currentThickness);
 
-        for(int i = 0; i < count; i++)
+        // ---- 履歴1つずつに4つの頂点とUV座標を作成する
+        for (int i = 0; i < count; i++)
         {
             Vector3 top = topHistory[i];
             Vector3 under = underHistory[i];
 
-            // ローカル座標系に変換しつつ厚みを持たせた4つの頂点を作成
+            // ローカル座標系に変換しつつ4つの頂点を作成
             vertices[i * 4] = transform.InverseTransformPoint(top);
             vertices[i * 4 + 1] = transform.InverseTransformPoint(under);
             vertices[i * 4 + 2] = transform.InverseTransformPoint(top + thicknessOffset);
             vertices[i * 4 + 3] = transform.InverseTransformPoint(under + thicknessOffset);
 
+            // メッシュの長さに沿ってUV座標を作成
             float v = (float)i / (count - 1);
             uv[i * 4] = new Vector2(0, v);
             uv[i * 4 + 1] = new Vector2(1, v);
@@ -232,6 +215,7 @@ public class EffectController : MonoBehaviour
             uv[i * 4 + 3] = new Vector2(1, v);
         }
 
+        // ---- 4つの頂点を繋ぎ合わせ3Dポリゴンを作成する
         int triIndex = 0;
         for (int i = 0; i < count - 1; i++)
         {
@@ -256,7 +240,7 @@ public class EffectController : MonoBehaviour
             triangles[triIndex++] = nextBaseIndex + 3;
             triangles[triIndex++] = nextBaseIndex + 2;
 
-            // 面3(上面)
+            // 面3(上部厚み)
             triangles[triIndex++] = baseIndex;
             triangles[triIndex++] = baseIndex + 2;
             triangles[triIndex++] = nextBaseIndex;
@@ -265,7 +249,7 @@ public class EffectController : MonoBehaviour
             triangles[triIndex++] = baseIndex + 2;
             triangles[triIndex++] = nextBaseIndex + 2;
 
-            // 面4(下面)
+            // 面4(下部厚み)
             triangles[triIndex++] = baseIndex + 1;
             triangles[triIndex++] = nextBaseIndex + 1;
             triangles[triIndex++] = baseIndex + 3;
@@ -275,10 +259,56 @@ public class EffectController : MonoBehaviour
             triangles[triIndex++] = nextBaseIndex + 3;
         }
 
+        // ---- メッシュをクリアしてから新メッシュを描画する
         trailMesh.Clear();
-        trailMesh.vertices = vertices;
-        trailMesh.uv = uv;
-        trailMesh.triangles = triangles;
-        trailMesh.RecalculateNormals();
+        trailMesh.vertices = vertices;  // 「4つの頂点」を登録
+        trailMesh.uv = uv;  // 「UV座標」を登録
+        trailMesh.triangles = triangles;  // 「三角形の面」を登録
+        trailMesh.RecalculateNormals();  // 光や影を自動計算
     }
+
+    #endregion // スイング関係の処理 ----
+
+    #region エフェクト・メッシュのクリア処理 ----
+
+    /// <summary>
+    /// 全てのメッシュ・エフェクトを停止・消去する
+    /// </summary>
+    public void StopAllEffects()
+    {
+        isEmitting = false;
+        isChargedTrail = false;
+
+        // 履歴とメッシュをクリアする
+        topHistory.Clear();
+        underHistory.Clear();
+        if(trailMesh != null)
+        {
+            trailMesh.Clear();
+        }
+
+        ClearEffects();
+    }
+
+    /// <summary>
+    /// 全てのエフェクトをクリアする処理
+    /// </summary>
+    private void ClearEffects()
+    {
+        // 通常チャージのエフェクトをクリアする
+        if(activeNormalEffect != null)
+        {
+            Destroy(activeNormalEffect);
+            activeNormalEffect = null;
+        }
+
+        // マックスチャージのエフェクトをクリアする
+        if(activeMaxEffect != null)
+        {
+            Destroy(activeMaxEffect);
+            activeMaxEffect= null;
+        }
+    }
+
+    #endregion // エフェクト・メッシュのクリア処理 ----
 }

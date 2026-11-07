@@ -6,7 +6,7 @@
 public static class SceneBridge
 {
     // 次に読み込むシーン名
-    public static string NextSceneName { get; private set; } = string.Empty;
+    public static string NextSceneName { get; private set; } = "01_TitleScene";
 
     /// <summary>
     /// ロード画面を経由し次のシーンへ移動する処理

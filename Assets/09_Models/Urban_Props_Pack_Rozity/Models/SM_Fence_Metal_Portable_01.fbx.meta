@@ -1,9 +1,21 @@
 fileFormatVersion: 2
 guid: 328c216b3047fd54bb4d1433b54f7df6
+AssetOrigin:
+  serializedVersion: 1
+  productId: 377016
+  packageName: Urban Props Pack
+  packageVersion: 1.0
+  assetPath: Assets/Urban_Props_Pack_Rozity/Models/SM_Fence_Metal_Portable_01.fbx
+  uploadId: 925114
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: d321dbae0fd013b418eed8e61a5de717, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -108,10 +120,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 377016
-  packageName: Urban Props Pack
-  packageVersion: 1.0
-  assetPath: Assets/Urban_Props_Pack_Rozity/Models/SM_Fence_Metal_Portable_01.fbx
-  uploadId: 925114

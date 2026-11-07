@@ -1,9 +1,21 @@
 fileFormatVersion: 2
 guid: f942885bfb101b24cb06e39933a60183
+AssetOrigin:
+  serializedVersion: 1
+  productId: 377016
+  packageName: Urban Props Pack
+  packageVersion: 1.0
+  assetPath: Assets/Urban_Props_Pack_Rozity/Models/SM_FireHydrant_01.fbx
+  uploadId: 925114
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 1
+    second: {fileID: 2100000, guid: 9042136a10848b64fb59d4b7a37f3908, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -108,10 +120,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 377016
-  packageName: Urban Props Pack
-  packageVersion: 1.0
-  assetPath: Assets/Urban_Props_Pack_Rozity/Models/SM_FireHydrant_01.fbx
-  uploadId: 925114

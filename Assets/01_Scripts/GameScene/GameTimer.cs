@@ -37,10 +37,9 @@ public class GameTimer : MonoBehaviour
 
     void Start()
     {
-        currentTimer = countdownTime;  // プレイ時間の設定(5分)
+        currentTimer = countdownTime;
 
-        // ---- ゲームスタート前処理
-        // HUDを非表示にする
+        // ---- ゲームスタート開始前処理
         if(imgCount3 != null)
         {
             imgCount3.gameObject.SetActive(false);
@@ -66,19 +65,17 @@ public class GameTimer : MonoBehaviour
             imgTimeUp.gameObject.SetActive(false);
         }
 
-        // タイマーは固定表示にさせておく
         if (txtTimer != null)
         {
             txtTimer.text = " 5:00.00";
         }
 
-        // プレイヤー操作を停止にしておく
         if (playerController != null)
         {
             playerController.DisableControl();
         }
 
-        StartCoroutine(GameStartCountdownRoutine());  // カウントダウン演出開始
+        StartCoroutine(GameStartCountdownRoutine());
     }
 
     void Update()
@@ -89,7 +86,6 @@ public class GameTimer : MonoBehaviour
         // Time.timeScale = 0の場合は、Time.deltaTimeが0になるため。
         currentTimer -= Time.deltaTime;
 
-        // 現在タイマーが0になった場合、タイムアップ処理が実行される。
         if(currentTimer <= 0f)
         {
             currentTimer = 0f;
@@ -97,7 +93,7 @@ public class GameTimer : MonoBehaviour
             StartCoroutine(OnTimeUpRoutine());
         }
 
-        UpdateTimerUI(); // タイマー表示更新
+        UpdateTimerUI();
     }
 
     #region タイマー関係処理 ----
@@ -120,7 +116,7 @@ public class GameTimer : MonoBehaviour
     }
 
     /// <summary>
-    /// 強制タイムアップ(デバッグ用)
+    /// 強制タイムアップ処理(デバッグ用)
     /// </summary>
     public void ForceTimeUp()
     {
@@ -128,8 +124,8 @@ public class GameTimer : MonoBehaviour
 
         currentTimer = 0f;
         isTimerRunning = false;
-        UpdateTimerUI();  // タイマー表示を0にする
-        StartCoroutine(OnTimeUpRoutine());  // タイムアップ処理を実行
+        UpdateTimerUI();
+        StartCoroutine(OnTimeUpRoutine());
     }
 
     /// <summary>
@@ -138,16 +134,12 @@ public class GameTimer : MonoBehaviour
     /// <returns>待機時間 IEnumerator</returns>
     private IEnumerator GameStartCountdownRoutine()
     {
-        // 「3」の表示
         yield return StartCoroutine(PlayerCountAnimation(imgCount3));
 
-        // 「2」の表示
         yield return StartCoroutine(PlayerCountAnimation(imgCount2));
 
-        // 「1」の表示
         yield return StartCoroutine(PlayerCountAnimation(imgCount1));
 
-        // 「Start」の表示
         if (imgStart != null)
         {
             yield return StartCoroutine(PlayerStartAnimation(imgStart));
@@ -155,7 +147,6 @@ public class GameTimer : MonoBehaviour
 
         isTimerRunning = true;
 
-        // プレイヤー操作を有効にする
         if (playerController != null)
         {
             playerController.EnableControl();
@@ -172,22 +163,18 @@ public class GameTimer : MonoBehaviour
 
         AudioManager.PlaySETimeUp();
 
-        // プレイヤー操作を停止にする
         if (playerController != null)
         {
             playerController.DisableControl();
         }
 
-        // タイムアップを表示させる
         if (imgTimeUp != null)
         {
             imgTimeUp.gameObject.SetActive(true);
         }
 
-        // 一定時間待機
         yield return new WaitForSeconds(timeUpDisplayDelay);
 
-        // GameManager側でタイトルシーン移動処理を呼ぶ
         if (gameManager != null)
         {
             gameManager.GoToResultScene();
@@ -215,7 +202,6 @@ public class GameTimer : MonoBehaviour
 
         AudioManager.PlaySECountDown();
 
-        // 初期状態の設定
         targetObj.SetActive(true);
         rectTrans.localScale = Vector3.one * 1.5f;
 
@@ -223,10 +209,8 @@ public class GameTimer : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(rectTrans.DOScale(0.05f, countDisplayDuration).SetEase(Ease.InBack));
 
-        // アニメーションが終わるまで待機
         yield return seq.WaitForCompletion();
 
-        // オブジェクトを非表示にする
         targetObj.SetActive(false);
     }
 
@@ -243,7 +227,6 @@ public class GameTimer : MonoBehaviour
 
         AudioManager.PlaySEGameStart();
 
-        // 初期状態の設定
         targetObj.SetActive(true);
         rectTrans.localScale = Vector3.one * 0.5f;
 
@@ -251,14 +234,12 @@ public class GameTimer : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(rectTrans.DOScale(1.5f, 0.3f).SetEase(Ease.OutBack));
 
-        // アニメーションが終わるまで待機
         yield return seq.WaitForCompletion();
 
         // 大きい表示の一定時間キープする
         float displayHoldTime = Mathf.Max(0.1f, countDisplayDuration - 0.3f);
         yield return new WaitForSeconds(displayHoldTime);
 
-        // オブジェクトを非表示にする
         targetObj.SetActive(false);
     }
 

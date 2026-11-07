@@ -25,7 +25,6 @@ public class ObjectSpawner : MonoBehaviour
 
     void Start()
     {
-        // ゲーム開始から一定時間ごとにオブジェクトをランダム生成するコルーチンを開始
         StartCoroutine(SpawnRoutine());
     }
 
@@ -37,10 +36,7 @@ public class ObjectSpawner : MonoBehaviour
     {
         while(true)
         {
-            // 一定時間待機
             yield return new WaitForSeconds(spawnInterval);
-
-            // ランダム生成を実行
             SpawnObject();
         }
     }
@@ -52,16 +48,13 @@ public class ObjectSpawner : MonoBehaviour
     {
         if (spawnPrefabs == null || spawnPrefabs.Length == 0) return;
 
-        // プレハブ配列からランダムに1つ選択
         int randomIndex = Random.Range(0, spawnPrefabs.Length);
         GameObject targetPrefab = spawnPrefabs[randomIndex];
 
-        // ランダムな位置を設定
         float randomX = Random.Range(minX, maxX);
         float randomZ = Random.Range(minZ, maxZ);
         Vector3 spawnPosition = new Vector3(randomX, spawnY, randomZ);
 
-        // 空中にオブジェクトを生成
         Instantiate(targetPrefab, spawnPosition, Quaternion.identity);
 
         Debug.Log($"オブジェクトを生成しました！{spawnPosition}");

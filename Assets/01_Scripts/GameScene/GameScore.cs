@@ -40,7 +40,6 @@ public class GameScore : MonoBehaviour
 
     void Start()
     {
-        // 初期処理として現在スコア(0)をスコア表示に反映させる
         displayScore = currentScore;
         UpdateScoreUI(displayScore); 
     }
@@ -49,16 +48,15 @@ public class GameScore : MonoBehaviour
     {
         // ---- デバッグ用
         // 「Eキー」押下で+1000pt
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            AddScore(1000);
-        }
-
-        // 「Rキー」押下で+10000pt
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            AddScore(10000);
-        }
+        //if(Input.GetKeyDown(KeyCode.E))
+        //{
+        //    AddScore(1000);
+        //}
+        //// 「Rキー」押下で+10000pt
+        //if(Input.GetKeyDown(KeyCode.R))
+        //{
+        //    AddScore(10000);
+        //}
     }
 
     /// <summary>
@@ -70,7 +68,6 @@ public class GameScore : MonoBehaviour
         int previousScore = currentScore;
         currentScore += amount;
 
-        // カウントアップ演出でUIを更新する
         AnimateScore(previousScore, currentScore);
     }
 

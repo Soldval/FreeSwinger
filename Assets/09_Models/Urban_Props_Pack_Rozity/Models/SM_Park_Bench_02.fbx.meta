@@ -1,9 +1,21 @@
 fileFormatVersion: 2
 guid: 60acf20ced47ee342b80ac683a737bf3
+AssetOrigin:
+  serializedVersion: 1
+  productId: 377016
+  packageName: Urban Props Pack
+  packageVersion: 1.0
+  assetPath: Assets/Urban_Props_Pack_Rozity/Models/SM_Park_Bench_02.fbx
+  uploadId: 925114
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bench2
+    second: {fileID: 2100000, guid: 057003e7d5d424246b33e260b2efd890, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -108,10 +120,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 377016
-  packageName: Urban Props Pack
-  packageVersion: 1.0
-  assetPath: Assets/Urban_Props_Pack_Rozity/Models/SM_Park_Bench_02.fbx
-  uploadId: 925114

@@ -12,11 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("移動速度設定用")]
     [SerializeField] private float normalMoveSpeed = 2.0f;
     [SerializeField] private float chargeMoveSpeed = 0.8f;
-
-    [Header("スイング設定用")]
-    [SerializeField] private Animator animator;
-    public bool isSwinging = false;
-    public bool isCharging = false;
+    private float normalSprintSpeed = 12.0f;
 
     [Header("チャージ設定用")]
     [SerializeField] private float chargeThreshold = 3.0f;
@@ -24,11 +20,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("チャージ時バット位置調整用")]
     [SerializeField] private Vector3 chargeBatPosition = new Vector3(-0.083f, -1.359f, -0.104f);
-    [SerializeField] private Vector3 chargeBatRotation = new Vector3(17.401f, -4.919f, -93.72f);     
+    [SerializeField] private Vector3 chargeBatRotation = new Vector3(17.401f, -4.919f, -93.72f);
+
+    [Header("スイング設定用")]
+    [SerializeField] private Animator animator;
+    public bool isSwinging = false;
+    public bool isCharging = false;
 
     [Header("バット持ち替え設定用")]
     [SerializeField] private Transform batTransform;
-    [SerializeField] private Transform batAnchorRight;
+    [SerializeField] private Transform batAnchorRight;  // 場所:胸ボーンの子オブジェクト
 
     [Header("ボーン参照用(動的持ち替え用)")]
     [SerializeField] private Transform chestBone;
@@ -49,18 +50,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private BatHitController batHitController;
 
     [Header("トレイル設定")]
-    //[SerializeField] private BatTrailMesh batTrailMesh;
     [SerializeField] private TrailRenderer batTrailRendererTop;
     [SerializeField] private TrailRenderer batTrailRendererUnder;
 
     [Header("エフェクト設定")]
     [SerializeField] private EffectController effectController;
 
-    // バットの初期位置・角度保存用変数
+    // 内部変数(バットの初期位置・角度保存用変数)
     private Vector3 initialAnchorPosition;
     private Quaternion initialAnchorRotation;
 
-    // その他内部変数
+    // 内部変数(その他)
     private ThirdPersonController thirdPersonController;
     private CharacterController characterController;
     private Coroutine autoEndSwingCoroutine;
@@ -73,67 +73,52 @@ public class PlayerController : MonoBehaviour
         thirdPersonController = GetComponent<ThirdPersonController>();
         characterController = GetComponent<CharacterController>();
 
-        // 通常速度を初期設定から記録
         if(thirdPersonController != null )
         {
             normalMoveSpeed = thirdPersonController.MoveSpeed;
+            normalSprintSpeed = thirdPersonController.SprintSpeed;
         }
 
-        // BatAnchor_rの胸から相対位置・角度を記憶する
+        // batAnchorRight(胸ボーン位置)から位置・角度を記憶する
         if(batAnchorRight != null)
         {
             initialAnchorPosition = batAnchorRight.localPosition;
             initialAnchorRotation = batAnchorRight.localRotation;
         }
-
-        // 初期状態でBatAnchor_rを胸ボーン(chestBone)の子にする
-        if(batAnchorRight != null && chestBone != null)
-        {
-            batAnchorRight.SetParent(chestBone, false);
-            batAnchorRight.localPosition = initialAnchorPosition;
-            batAnchorRight.localRotation = initialAnchorRotation;
-        }
     }
 
     void Update()
     {
+        // プレイヤー操作可能/不可能を確認
         if (!canControl) return;
 
-        // Spaceキー押し始めたら構え状態に入る
+        // Spaceキー押し始めたらチャージ状態に入る
         if(Input.GetKeyDown(KeyCode.Space) && !isSwinging && !isCharging)
         {
             StartCharge();
         }
-
-        // チャージ中はタイマーをカウントアップ
         if(isCharging)
         {
             chargeTimer += Time.deltaTime;
 
-            // チャージ中のエフェクト進行度を更新
             if(effectController != null)
             {
                 effectController.UpdateChargeProgress(chargeTimer, chargeThreshold);
             }
         }
 
-        // Spaceキーを離し瞬間にスイングする
+        // Spaceキーを離した瞬間にスイング動作を行う
         if(Input.GetKeyUp(KeyCode.Space) && isCharging)
         {
             StartSwing();
         }
     }
 
-    void LateUpdate()
-    {
-        if(isSwinging)
-        {
-            Vector3 pos = transform.position;
-            pos.y = lockedGroundY;
-            transform.position = pos;
-        }
-    }
+    #region プレイヤー操作の可能/禁止にする処理 ----
 
+    /// <summary>
+    /// プレイヤー操作を可能にする処理
+    /// </summary>
     public void EnableControl()
     {
         canControl = true;
@@ -145,12 +130,13 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤー操作を一切禁止にする処理
+    /// プレイヤー操作を禁止にする処理
     /// </summary>
     public void DisableControl()
     {
         canControl = false;
 
+        // チャージ状態であれば、エフェクトクリアとチャージ解除を行う。
         if(isCharging)
         {
             isCharging = false;
@@ -162,6 +148,12 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("IsCharging", false);
             }
+
+            if(thirdPersonController != null)
+            {
+                thirdPersonController.MoveSpeed = normalMoveSpeed;
+                thirdPersonController.SprintSpeed = normalSprintSpeed;
+            }
         }
 
         if(thirdPersonController != null)
@@ -170,8 +162,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    #endregion // プレイヤー操作の可能/禁止にする処理 ----
+
+    #region チャージ関係の処理 ----
+
     /// <summary>
-    /// Spaceキー長押しによる構え状態の開始処理
+    /// チャージ状態の開始処理
     /// </summary>
     public void StartCharge()
     {
@@ -180,19 +176,17 @@ public class PlayerController : MonoBehaviour
 
         lockedGroundY = transform.position.y;
 
-        // 移動速度をチャージ用低速にする
         if(thirdPersonController != null)
         {
             thirdPersonController.MoveSpeed = chargeMoveSpeed;
+            thirdPersonController.SprintSpeed = chargeMoveSpeed;
         }
 
-        // チャージ開始のエフェクトを呼び出す
         if(effectController != null)
         {
             effectController.StartChargeEffect();
         }
 
-        // 残っているスイングTriggerをクリアする
         if(animator != null)
         {
             animator.ResetTrigger("LeftSwingTrigger");
@@ -200,7 +194,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsCharging", true);
         }
 
-        // チャージ開始時点でバットを右手ボーンに追従させる
+        // チャージ開始でバットを右手ボーン(チャージポジション)に追従させる
         if(batAnchorRight != null && chestBone != null)
         {
             batAnchorRight.SetParent(chestBone, false);
@@ -213,6 +207,10 @@ public class PlayerController : MonoBehaviour
         EnableLeftHandIK();
     }
 
+    #endregion // チャージ関係の処理 ----
+
+    #region スイング関係の処理 ----
+
     /// <summary>
     /// スイング動作の開始処理
     /// </summary>
@@ -222,15 +220,13 @@ public class PlayerController : MonoBehaviour
         isSwinging = true;
         bool isMaxCharged = (chargeTimer >= chargeThreshold);
 
-        AudioManager.PlaySELeftSwing();
-
-        // 振りぬいている最中は移動を止める
+        // スイング中は移動を止める
         if(thirdPersonController != null)
         {
             thirdPersonController.enabled = false;
         }
 
-        // スイング中はCharacterControllerも無効化して足の位置を地面に固定する
+        // スイング中はCharacterControllerも無効化し足の位置を地面に固定する
         if(characterController != null)
         {
             characterController.enabled = false;
@@ -248,10 +244,9 @@ public class PlayerController : MonoBehaviour
             batHitController.EnableCollider(isMaxCharged);
         }
         
-        // EffectController側のスイングエフェクト開始メソッドを呼び出す
+        // スイングエフェクト開始処理を呼び出す
         if(effectController != null)
         {
-            //bool isMaxCharge = (chargeTimer >= chargeThreshold);
             effectController.StartSwingEffect(isMaxCharged);
         }
 
@@ -259,12 +254,13 @@ public class PlayerController : MonoBehaviour
         DisableRightHandIK();
         DisableLeftHandIK();
 
-        // 既存のタイマーがあれば停止
+        // 古いコルーチンが動いていたらスイングを強制停止させる
         if(autoEndSwingCoroutine != null)
         {
             StopCoroutine(autoEndSwingCoroutine);
         }
 
+        // マックスチャージならチャージスイング、通常チャージなら通常スイングを行う。
         if(chargeTimer >= chargeThreshold)
         {
             animator.SetTrigger("ChargeLeftSwingTrigger");
@@ -293,7 +289,7 @@ public class PlayerController : MonoBehaviour
             batHitController.DisableCollider();
         }
 
-        // コルーチンが走っていれば停止
+        // 古いコルーチンが動いていれば強制停止させ空にする
         if(autoEndSwingCoroutine != null)
         {
             StopCoroutine(autoEndSwingCoroutine);
@@ -305,88 +301,32 @@ public class PlayerController : MonoBehaviour
         {
             thirdPersonController.enabled = true;
             thirdPersonController.MoveSpeed = normalMoveSpeed;
+            thirdPersonController.SprintSpeed = normalSprintSpeed;
         }
 
-        // CharacterControllerを再有効化する
+        // CharacterControllerを有効化する
         if(characterController != null)
         {
             characterController.enabled = true;
         }
 
-        // エフェクトを全て停止・消去する
+        // 全てのメッシュ・エフェクトを停止・消去する
         if(effectController != null)
         {
-            effectController.StopAllCoroutines();
+            effectController.StopAllEffects();
         }
 
         // スイング終了時に両手のIKをONにする
         EnableRightHandIK();
         EnableLeftHandIK();
 
+        // バットを初期位置に戻す
         ResetBatTransform();
     }
 
-    /// <summary>
-    /// アニメーションイベントが打たれていなかった場合の自動安全解除
-    /// </summary>
-    /// <param name="delaySeconds"></param>
-    /// <returns></returns>
-    private IEnumerator AutoEndSwingRoutine(float delaySeconds)
-    {
-        yield return new WaitForSeconds(delaySeconds);
+    #endregion // スイング関係の処理 ----
 
-        if(isSwinging)
-        {
-            Debug.Log("自動安全機能でEndSwingを実施しました");
-            EndSwing();
-        }
-    }
-
-    /// <summary>
-    /// 左手・右手をTargetオブジェクトに吸着させる処理
-    /// IK Pass が有効な時に自動呼び出し
-    /// </summary>
-    /// <param name="layerIndex"></param>
-    private void OnAnimatorIK(int layerIndex)
-    {
-        if (animator == null) return;
-
-        // 右手のIK処理
-        if(rightHandTarget != null)
-        {
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, rightIkWeight);
-            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, rightIkWeight);
-            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
-            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
-        }
-
-        // チャージ中ならばチャージ用ターゲットを使い、通常時は通常ターゲットを使う。
-        Transform targetHand = (isCharging && chargeLeftHandTarget != null) ? chargeLeftHandTarget : leftHandTarget;
-        Transform targetElbow = (isCharging && chargeLeftElbowHint != null) ? chargeLeftElbowHint : leftElbowHint;
-
-        // 左手のIK処理
-        if (targetHand != null)
-        {
-            // 位置と回転の吸着度合
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, LeftIkWeight);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, LeftIkWeight);
-            animator.SetIKPosition(AvatarIKGoal.LeftHand, targetHand.position);
-            animator.SetIKRotation(AvatarIKGoal.LeftHand, targetHand.rotation);
-
-            // 肘の曲がる方向制御
-            if (targetElbow != null)
-            {
-                animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, LeftIkWeight);
-                animator.SetIKHintPosition(AvatarIKHint.LeftElbow, targetElbow.position);
-            }
-        }
-        else
-        {
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
-            animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, 0);
-        }
-    }
+    #region IK処理まとめ ----
 
     /// <summary>
     /// 右手のバット吸着をONにする処理
@@ -418,7 +358,59 @@ public class PlayerController : MonoBehaviour
     public void DisableLeftHandIK()
     {
         LeftIkWeight = 0.0f;
-    }    
+    }
+
+    /// <summary>
+    /// 左手・右手をTargetオブジェクトに吸着させる処理
+    /// IK Pass が有効な時に自動呼び出し
+    /// </summary>
+    /// <param name="layerIndex">アニメーションレイヤーの番号</param>
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (animator == null) return;
+
+        // ---- 右手のIK処理
+        if (rightHandTarget != null)
+        {
+            // 位置と回転の吸着設定
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, rightIkWeight);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, rightIkWeight);
+            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandTarget.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
+        }
+
+        // ---- チャージ中ならばチャージ用ターゲットを使い、通常時は通常ターゲットを使う。
+        Transform targetHand = (isCharging && chargeLeftHandTarget != null) ? chargeLeftHandTarget : leftHandTarget;
+        Transform targetElbow = (isCharging && chargeLeftElbowHint != null) ? chargeLeftElbowHint : leftElbowHint;
+
+        // ---- 左手のIK処理
+        if (targetHand != null)
+        {
+            // 位置と回転の吸着設定
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, LeftIkWeight);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, LeftIkWeight);
+            animator.SetIKPosition(AvatarIKGoal.LeftHand, targetHand.position);
+            animator.SetIKRotation(AvatarIKGoal.LeftHand, targetHand.rotation);
+
+            // 肘の曲がる方向制御
+            if (targetElbow != null)
+            {
+                animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, LeftIkWeight);
+                animator.SetIKHintPosition(AvatarIKHint.LeftElbow, targetElbow.position);
+            }
+        }
+        else
+        {
+            // ターゲットがない場合はIKを無しにする
+            animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+            animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
+            animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, 0);
+        }
+    }
+
+    #endregion // IK処理まとめ ----
+
+    #region その他処理まとめ ----
 
     /// <summary>
     /// バットの位置・角度を初期状態にリセットする処理
@@ -438,7 +430,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// [アニメーションイベント用] バットを右手ボーンの子にする処理
+    /// [アニメーションイベント用] バットを右手ボーンの子オブジェクトにする処理
     /// </summary>
     public void AttachBatToRightHand()
     {
@@ -448,6 +440,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// [アニメーションイベント用] バットを胸ボーンの子オブジェクトにする処理
+    /// </summary>
     public void AttachBatToChest()
     {
         if(batAnchorRight != null && chestBone != null)
@@ -455,4 +450,22 @@ public class PlayerController : MonoBehaviour
             batAnchorRight.SetParent(chestBone, true);
         }
     }
+
+    /// <summary>
+    /// アニメーションイベントが実行されなかった場合の自動スイング解除処理(コルーチン)
+    /// </summary>
+    /// <param name="delaySeconds">ディレイ時間</param>
+    /// <returns>待機時間 IEnumerator</returns>
+    private IEnumerator AutoEndSwingRoutine(float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+
+        if (isSwinging)
+        {
+            Debug.Log("自動機能でEndSwingを実施しました");
+            EndSwing();
+        }
+    }
+
+    #endregion // その他処理まとめ ----
 }

@@ -14,6 +14,7 @@ public class ObjectDestructor : MonoBehaviour
     [Header("巻き込みエフェクト設定")]
     [SerializeField] private float explosionRadius = 3.0f;
     [SerializeField] private float explosionForce = 10.0f;
+    [SerializeField] private float chainUpwardForce = 10.0f;
 
     [Header("加算スコア設定")]
     [SerializeField] private int explodeScore = 2000;
@@ -28,6 +29,7 @@ public class ObjectDestructor : MonoBehaviour
     /// </summary>
     public void MarkAsHit()
     {
+        AudioManager.PlaySEBatHit();
         hasBeenHit = true;
     }
 
@@ -42,7 +44,6 @@ public class ObjectDestructor : MonoBehaviour
         // プレイヤー自身やバットに当たった場合は無視
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.name.Contains("bat")) return;
 
-        // スコア加算する
         if (GameScore.Instance != null)
         {
             GameScore.Instance.AddScore(explodeScore);
@@ -60,6 +61,16 @@ public class ObjectDestructor : MonoBehaviour
     {
         if (isDestroyed) return;
         isDestroyed = true;
+
+        if(isChained)
+        {
+            Rigidbody rbSelf = GetComponent<Rigidbody>();
+            if(rbSelf != null)
+            {
+                rbSelf.linearVelocity = Vector3.zero;
+                rbSelf.AddForce(Vector3.up * chainUpwardForce, ForceMode.Impulse);
+            }
+        }
 
         // エフェクトの生成
         if (isChained && chainBreakEffectPrefab != null)
@@ -91,7 +102,7 @@ public class ObjectDestructor : MonoBehaviour
                 Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
-                    rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, 1.0f, ForceMode.Impulse);
+                    rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, 3.0f, ForceMode.Impulse);
                 }
 
                 // ObjectDestructorを持っているオブジェクトのみを連鎖破壊対象にする
@@ -100,7 +111,6 @@ public class ObjectDestructor : MonoBehaviour
                 {
                     otherDestructor.ExplodeAndChainBreak(true);
                     Destroy(hitCollider.gameObject, 0.3f);
-                    // スコア加算する
                     if (GameScore.Instance != null)
                     {
                         GameScore.Instance.AddScore(chainBreakScore);
@@ -109,7 +119,15 @@ public class ObjectDestructor : MonoBehaviour
             }
         }
 
-        // 自分自身オブジェクトを消滅させる
+        if(!isChained)
+        {
+            AudioManager.PlaySEExplosion();
+        }
+        else
+        {
+            AudioManager.PlaySEChainBreak();
+        }
+
         Destroy(gameObject);
 
         Debug.Log(gameObject.name + " が破壊されました(連鎖爆発: " + isChained + ")");

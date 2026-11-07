@@ -27,7 +27,13 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip seCountDown;  // ゲーム開始前カウントダウン効果音
     [SerializeField] private AudioClip seGameStart;  // ゲーム開始効果音
     [SerializeField] private AudioClip seTimeUp;  // タイムアップ効果音
+    [SerializeField] private AudioClip seCharge;  // チャージ開始効果音
+    [SerializeField] private AudioClip seMaxCharge;  // マックスチャージ効果音
     [SerializeField] private AudioClip seLeftSwing;  // 左スイング効果音
+    [SerializeField] private AudioClip seChargeLeftSwing;  // チャージ左スイング効果音
+    [SerializeField] private AudioClip seBatHit; // バットヒット効果音
+    [SerializeField] private AudioClip seExplosion; // 爆発効果音
+    [SerializeField] private AudioClip seChainBreak;  // 連鎖破壊効果音
 
     [Header("UI効果音素材(リザルトシーン)")]
     [SerializeField] private AudioClip seCountUp;  // カウントアップ効果音
@@ -132,6 +138,26 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
+    /// チャージ開始効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySECharge()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seCharge);
+    }
+
+    /// <summary>
+    /// マックスチャージ効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEMaxCharge()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seMaxCharge);
+    }
+
+    /// <summary>
     /// 左スイング効果音を鳴らす処理
     /// </summary>
     public static void PlaySELeftSwing()
@@ -139,6 +165,46 @@ public class AudioManager : MonoBehaviour
         if (instance == null) return;
 
         instance.PlaySE(instance.seLeftSwing);
+    }
+
+    /// <summary>
+    /// チャージ左スイング効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEChargeLeftSwing()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seChargeLeftSwing);
+    }
+
+    /// <summary>
+    /// バットヒット効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEBatHit()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seBatHit);
+    }
+
+    /// <summary>
+    /// 爆発効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEExplosion()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seExplosion);
+    }
+
+    /// <summary>
+    /// 連鎖破壊効果音を鳴らす処理
+    /// </summary>
+    public static void PlaySEChainBreak()
+    {
+        if (instance == null) return;
+
+        instance.PlaySE(instance.seChainBreak);
     }
 
     #endregion // ゲームシーンSE処理まとめ ----

@@ -6,12 +6,12 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 
 /// <summary>
-/// フォーカス状態のUIのOutlineをDOTweenで点滅させるクラス
+/// フォーカスしているUIのOutlineをDOTweenで点滅させるクラス
 /// </summary>
 [RequireComponent(typeof(Outline))]
 public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
 {
-    [Header("フォーカスを監視する対象のスライダー(未割り当て時は自動取得)")]
+    [Header("フォーカスを監視する対象スライダー")]
     [SerializeField] private Selectable targetSelectable;
 
     [SerializeField] private float duration = 1.5f;
@@ -31,7 +31,6 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
             outline.enabled = false;
         }
 
-        // 監視対象オブジェクトが空の場合、子オブジェクトを自動取得する。
         if(targetSelectable == null)
         {
             targetSelectable = GetComponentInChildren<Selectable>();
@@ -54,8 +53,13 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
         }
     }
 
+    void OnDisable()
+    {
+        StopPulse();
+    }
+
     /// <summary>
-    /// outlineの点滅アニメーションを開始する処理
+    /// outline点滅アニメーションを開始する処理
     /// </summary>
     private void StartPulse()
     {
@@ -63,7 +67,6 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
 
         isPulsing = true;
         outline.enabled = true;
-
         pulseTween?.Kill();
 
         Color color = outline.effectColor;
@@ -76,20 +79,15 @@ public class UIOutlinePulseOnSelectDOTween : MonoBehaviour
     }
 
     /// <summary>
-    /// outlineの点滅アニメーションを停止し非表示にする処理
+    /// outline点滅アニメーションを停止し非表示にする処理
     /// </summary>
     private void StopPulse()
     {
         isPulsing = false;
         pulseTween?.Kill();
-        if (outline != null) outline.enabled = false;
-    }
-
-    /// <summary>
-    /// 非アクティブ時にアニメーションを破棄・安全停止させる処理
-    /// </summary>
-    void OnDisable()
-    {
-        StopPulse();
+        if (outline != null)
+        {
+            outline.enabled = false;
+        }
     }
 }

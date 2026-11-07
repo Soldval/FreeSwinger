@@ -11,19 +11,24 @@ public class RankingDataStore : MonoBehaviour
     // インスタンス(シングルトン)
     public static RankingDataStore Instance;
 
+    [Header("ランキングデータの保存数")]
+    public int rankingDataLength = 5;
+
     // ランキングデータの保存配列
-    public int[] scores = new int[5] { -1, -1, -1, -1, -1 };
-    public GradeType[] grades = new GradeType[5] { GradeType.None, GradeType.None, GradeType.None, GradeType.None, GradeType.None };
-    public string[] dates = new string[5] { "", "", "", "", "" };
+    [HideInInspector] public int[] scores;
+    [HideInInspector] public GradeType[] grades;
+    [HideInInspector] public string[] dates;
 
     void Awake()
     {
+        InitializeArrays();
+
         // RankingDataStoreのインスタンスはシングルトン
         if(Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadRankingData();  // 起動時にロードする
+            LoadRankingData();
         }
         else
         {
@@ -32,33 +37,50 @@ public class RankingDataStore : MonoBehaviour
     }
 
     /// <summary>
+    /// ランキングデータの保存配列を初期化する処理
+    /// </summary>
+    private void InitializeArrays()
+    {
+        scores = new int[rankingDataLength];
+        grades = new GradeType[rankingDataLength];
+        dates = new string[rankingDataLength];
+
+        for(int i = 0; i < rankingDataLength; i++)
+        {
+            scores[i] = -1;
+            grades[i] = GradeType.None;
+            dates[i] = "";
+        }
+    }
+
+    /// <summary>
     /// スコアチェックしてランキング登録しPlayerPrefsに保存する処理
     /// </summary>
-    /// <param name="newScore"></param>
-    /// <param name="newGrade"></param>
-    /// <returns></returns>
-    public int CheckAndRegisterRanking(int newScore, GradeType newGrade)
+    /// <param name="newScore">スコア結果</param>
+    /// <param name="newGrade">成績結果</param>
+    /// <returns>ランクインの順位 int</returns>
+    public int CheckAndRegisterRanking(int resultScore, GradeType resultGrade)
     {
         LoadRankingData();
 
         int rankIndex = -1;
 
-        // 上から順に比較して今回のスコアが高い場所を探す
-        for (int i = 0; i < scores.Length; i++)
+        // ---- 上から順に比較し今回スコアが高い場所を探す
+        for (int i = 0; i < rankingDataLength; i++)
         {
-            // scores[i] < 0 は未登録状態なので無条件でランクイン
-            if (scores[i] < 0 || newScore > scores[i])
+            // scores[i] < 0 は未登録状態なので無条件でランクインする
+            if (scores[i] < 0 || resultScore > scores[i])
             {
                 rankIndex = i;
                 break;
             }
         }
 
-        // ランクインする場合
+        // ---- ランクインする場合
         if (rankIndex >= 0)
         {
             // 既存のデータを下位へ押し出す
-            for (int i = scores.Length - 1; i > rankIndex; i--)
+            for (int i = rankingDataLength - 1; i > rankIndex; i--)
             {
                 scores[i] = scores[i - 1];
                 grades[i] = grades[i - 1];
@@ -66,24 +88,22 @@ public class RankingDataStore : MonoBehaviour
             }
 
             // 新しいデータを挿入
-            scores[rankIndex] = newScore;
-            grades[rankIndex] = newGrade;
+            scores[rankIndex] = resultScore;
+            grades[rankIndex] = resultGrade;
             dates[rankIndex] = DateTime.Now.ToString("yyyy/MM/dd");
 
-            // PlayerPrefsに保存
             SaveRankingData();
         }
 
-        // ランクインした順位を返す
         return rankIndex;
     }
 
     /// <summary>
-    /// ランキングデータをPlayerPrefsに保存する
+    /// ランキングデータをPlayerPrefsに保存する処理
     /// </summary>
     public void SaveRankingData()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < rankingDataLength; i++)
         {
             PlayerPrefs.SetInt($"RANKING_SCORE_{i}", scores[i]);
             PlayerPrefs.SetInt($"RANKING_GRADE_{i}", (int)grades[i]);
@@ -93,13 +113,19 @@ public class RankingDataStore : MonoBehaviour
     }
 
     /// <summary>
-    /// PlayerPrefsからランキングデータを読み込む
+    /// PlayerPrefsからランキングデータをロードする処理
     /// </summary>
     public void LoadRankingData()
     {
-        for (int i = 0; i < 5; i++)
+        // 配列サイズが変化している場合はランキングデータの再初期化を行う
+        if(scores == null || scores.Length != rankingDataLength)
         {
-            // 初期値がない場合は、スコア-1、成績None、日付空文字
+            InitializeArrays();
+        }
+
+        for (int i = 0; i < rankingDataLength; i++)
+        {
+            // 初期値がない場合は、スコア:-1、成績:None、日付:空文字 をロードする。
             scores[i] = PlayerPrefs.GetInt($"RANKING_SCORE_{i}", -1);
             grades[i] = (GradeType)PlayerPrefs.GetInt($"RANKING_GRADE_{i}", (int)GradeType.None);
             dates[i] = PlayerPrefs.GetString($"RANKING_DATE_{i}", "");

@@ -1155,6 +1155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85779e366786ac44e8c69ecea9b8c488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResultManager
+  rankingWindowManager: {fileID: 0}
   ResultScore: {fileID: 1048003784}
   countUpDuration: 3
   countUpEase: 18
@@ -1164,7 +1165,7 @@ MonoBehaviour:
   - gradeType: 1
     imageSprite: {fileID: 21300000, guid: 7f21be53a29bc04459652fd256c03fc8, type: 3}
   - gradeType: 2
-    imageSprite: {fileID: 21300000, guid: 560a941b8dbe6154384e7777446f488e, type: 3}
+    imageSprite: {fileID: 21300000, guid: 4a5cf2792f928c44bba6cc4692e894df, type: 3}
   - gradeType: 3
     imageSprite: {fileID: 21300000, guid: 89ae66f77ca6c1a4ea3c9dc19db5ffe6, type: 3}
   - gradeType: 4

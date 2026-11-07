@@ -2,10 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEditor;
-using UnityEngine.UIElements;
 
 using Slider = UnityEngine.UI.Slider;
 using Image = UnityEngine.UI.Image;
@@ -15,7 +12,7 @@ using Image = UnityEngine.UI.Image;
 /// </summary>
 public class SystemOptionManager : MonoBehaviour
 {
-    // 共通使用のためのインスタンス(シングルトン)
+    // インスタンス(シングルトン)
     public static SystemOptionManager instance {  get; private set; }
 
     [Header("AudioMixer")]
@@ -49,6 +46,7 @@ public class SystemOptionManager : MonoBehaviour
 
     void Awake()
     {
+        // SystemOptionManagerのインスタンスはシングルトン
         if(instance == null)
         {
             instance = this;
@@ -62,33 +60,44 @@ public class SystemOptionManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        SetupSlider();
+    }
+
     private void OnDestroy()
     {
-        if(instance == this)
+        // ゲームのアプリケーション終了時や重複インスタンス発生の場合、スライダー値のロードは行わない。
+        if (instance == this)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
 
-    void Start()
-    {
-        //LoadAndApplySettings();
-        SetupSlider();
-    }
-
+    /// <summary>
+    /// 新しいシーンロード完了時に明暗度・各音量設定を反映する処理
+    /// </summary>
+    /// <param name="scene">ロードしたシーン</param>
+    /// <param name="mode">ロードした方式</param>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // 明暗度設定を反映
         FindBrightnessOverlayInCurrentScene();
-
         float brightnessVal = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, DEFAULT_VOLUME);
         SetBrightnessInternal(brightnessVal);
 
+        // 各音量設定を反映
         RestoreSliderValues();
     }
 
+    #region 各スライダー関連の処理 ----
+
+    /// <summary>
+    /// 保存されている各スライダー値をロードし反映する処理
+    /// </summary>
     private void RestoreSliderValues()
     {
-        // シーン内の全てのスライダー(非アクティブも含む)を検索し名前で割り当てる
+        // ---- シーン内の全スライダー(非アクティブも含む)を検索し名前で割り当てる
         Slider[] allSliders = Resources.FindObjectsOfTypeAll<Slider>();
         foreach(var slider in allSliders)
         {
@@ -113,23 +122,22 @@ public class SystemOptionManager : MonoBehaviour
             }
         }
 
-        // 保存されている設定値を読み込む
+        // ---- 保存されている各設定値をロードする
         float masterVol = PlayerPrefs.GetFloat(MASTER_KEY, DEFAULT_VOLUME);
         float bgmVol = PlayerPrefs.GetFloat(BGM_KEY, DEFAULT_VOLUME);
         float seVol = PlayerPrefs.GetFloat(SE_KEY, DEFAULT_VOLUME);
         float brightnessVal = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, DEFAULT_BRIGHTNESS);
 
-        // 値を代入する前にリスナーをクリアし誤作動を防ぐ
+        // ---- 多重動作を防ぐため一旦リスナーをクリアしてから値を反映する
         if (masterSlider != null)
         {
-            masterSlider.onValueChanged.RemoveAllListeners(); // 多重登録を防ぐため一旦クリア
+            masterSlider.onValueChanged.RemoveAllListeners();
             masterSlider.value = masterVol;
             masterSlider.onValueChanged.AddListener((val) => {
                 SetMasterVolume(val);
                 PlayerPrefs.SetFloat(MASTER_KEY, val);
             });
         }
-
         if (bgmSlider != null)
         {
             bgmSlider.onValueChanged.RemoveAllListeners();
@@ -139,7 +147,6 @@ public class SystemOptionManager : MonoBehaviour
                 PlayerPrefs.SetFloat(BGM_KEY, val);
             });
         }
-
         if (seSlider != null)
         {
             seSlider.onValueChanged.RemoveAllListeners();
@@ -149,7 +156,6 @@ public class SystemOptionManager : MonoBehaviour
                 PlayerPrefs.SetFloat(SE_KEY, val);
             });
         }
-
         if (brightnessSlider != null)
         {
             brightnessSlider.onValueChanged.RemoveAllListeners();
@@ -158,19 +164,6 @@ public class SystemOptionManager : MonoBehaviour
                 SetBrightness(val);
                 PlayerPrefs.SetFloat(BRIGHTNESS_KEY, val);
             });
-        }
-    }
-
-    private void FindBrightnessOverlayInCurrentScene()
-    {
-        GameObject blackObj = GameObject.Find("BlackImage");
-        if(blackObj != null)
-        {
-            brightnessOverlayImage = blackObj.GetComponent<Image>();
-        }
-        else
-        {
-            brightnessOverlayImage= null;
         }
     }
 
@@ -196,17 +189,14 @@ public class SystemOptionManager : MonoBehaviour
         {
             masterSlider.value = masterVol;
         }
-
         if (bgmSlider != null)
         {
             bgmSlider.value = bgmVol;
         }
-
         if (seSlider != null)
         {
             seSlider.value = seVol;
         }
-
         if (brightnessSlider != null)
         {
             brightnessSlider.value = brightnessVal;
@@ -221,7 +211,6 @@ public class SystemOptionManager : MonoBehaviour
                 PlayerPrefs.SetFloat(MASTER_KEY, val);
             });
         }
-
         if (bgmSlider != null)
         {
             bgmSlider.onValueChanged.AddListener((val) =>
@@ -230,7 +219,6 @@ public class SystemOptionManager : MonoBehaviour
                 PlayerPrefs.SetFloat(BGM_KEY, val);
             });
         }
-
         if (seSlider != null)
         {
             seSlider.onValueChanged.AddListener((val) =>
@@ -239,7 +227,6 @@ public class SystemOptionManager : MonoBehaviour
                 PlayerPrefs.SetFloat(SE_KEY, val);
             });
         }
-
         if (brightnessSlider != null)
         {
             brightnessSlider.onValueChanged.AddListener((val) =>
@@ -250,20 +237,7 @@ public class SystemOptionManager : MonoBehaviour
         }
     }
 
-    private void LoadAndApplySettings()
-    {
-        // 保存されている各音量設定を読み込む
-        float masterVol = PlayerPrefs.GetFloat(MASTER_KEY, DEFAULT_VOLUME);
-        float bgmVol = PlayerPrefs.GetFloat(BGM_KEY, DEFAULT_VOLUME);
-        float seVol = PlayerPrefs.GetFloat(SE_KEY, DEFAULT_VOLUME);
-        float brightnessVal = PlayerPrefs.GetFloat(BRIGHTNESS_KEY, DEFAULT_BRIGHTNESS);
-
-        // 各音量・明暗度設定を反映
-        SetVolumeInternal(MASTER_PARAM, masterVol);
-        SetVolumeInternal(BGM_PARAM, bgmVol);
-        SetVolumeInternal(SE_PARAM, seVol);
-        SetBrightnessInternal(brightnessVal);
-    }
+    #endregion // 各スライダー関連の処理 ----
 
     #region 音量調整処理まとめ ----
 
@@ -321,7 +295,23 @@ public class SystemOptionManager : MonoBehaviour
 
     #endregion // 音量調整処理まとめ ----
 
-    #region 明暗度調整処理まとめ
+    #region 明暗度調整処理まとめ ----
+
+    /// <summary>
+    /// 今表示中のシーンから明暗度用画像をセットする処理
+    /// </summary>
+    private void FindBrightnessOverlayInCurrentScene()
+    {
+        GameObject blackObj = GameObject.Find("BlackImage");
+        if (blackObj != null)
+        {
+            brightnessOverlayImage = blackObj.GetComponent<Image>();
+        }
+        else
+        {
+            brightnessOverlayImage = null;
+        }
+    }
 
     /// <summary>
     /// 明暗度を変更する処理
@@ -335,6 +325,10 @@ public class SystemOptionManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    /// <summary>
+    /// 明暗度を反映する処理
+    /// </summary>
+    /// <param name="sliderValue">スライダー値</param>
     public void SetBrightnessInternal(float sliderValue)
     {
         if (brightnessOverlayImage == null) return;

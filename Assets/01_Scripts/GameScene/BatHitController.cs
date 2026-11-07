@@ -7,20 +7,24 @@ using UnityEngine;
 /// </summary>
 public class BatHitController : MonoBehaviour
 {
-    [Header("バットの吹っ飛ばす強さ")]
-    [SerializeField] private float hitPower = 15.0f;
-    [SerializeField] private float upwardPower = 15.0f;
+    [Header("通常スイングの吹っ飛ばす強さ")]
+    [SerializeField] private float normalHitPower = 20.0f;
+    [SerializeField] private float normalUpwardPower = 20.0f;
+
+    [Header("チャージスイングの吹っ飛ばす強さ")]
+    [SerializeField] private float chargeHitPower = 30.0f;
+    [SerializeField] private float chargeUpwardPower = 30.0f;
 
     [Header("バットのコライダー設定")]
     [SerializeField] private Collider leftSwingCollider;
     [SerializeField] private Collider chargeLeftSwingCollider;
 
     [Header("加算スコア設定")]
-    [SerializeField] private int hitScore = 1000;
+    [SerializeField] private int normalHitScore = 100;
+    [SerializeField] private int chargeHitScore = 200;
 
     void Awake()
     {
-        // バットのコライダーをOFFにする
         DisableCollider();
     }
 
@@ -61,7 +65,6 @@ public class BatHitController : MonoBehaviour
     /// </summary>
     public void DisableCollider()
     {
-        // チャージスイング・通常スイングのコライダー両方をOFF
         if(chargeLeftSwingCollider != null)
         {
             chargeLeftSwingCollider.enabled = false;
@@ -78,7 +81,6 @@ public class BatHitController : MonoBehaviour
     /// <param name="collision">衝突した側のコリジョン</param>
     private void OnCollisionEnter(Collision collision)
     {
-        // 衝突した側がRigidbodyを持っているか確認する
         Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
         if (rb == null) return;
 
@@ -89,23 +91,38 @@ public class BatHitController : MonoBehaviour
             destructor.MarkAsHit();
         }
 
+        // バットコライダーの状態によって通常ヒットかチャージヒットか判定する
+        bool isChargeHit = false;
+        foreach(ContactPoint contact in collision.contacts)
+        {
+            if(chargeLeftSwingCollider != null && contact.thisCollider == chargeLeftSwingCollider)
+            {
+                isChargeHit = true;
+                break;
+            }
+        }
+
+        float currentHitPower = isChargeHit ? chargeHitPower : normalHitPower;
+        float currentUpwardPower = isChargeHit ? chargeUpwardPower : normalUpwardPower;
+        int currentScore = isChargeHit ? chargeHitScore : normalHitScore;
+
         // 衝突した地点から前方へ力を加える
         Vector3 hitDirection = (collision.transform.position - transform.position).normalized;
 
         // 前方への力に上方向の力を加える
-        Vector3 finalForce = (hitDirection * hitPower) + (Vector3.up * upwardPower);
+        Vector3 finalForce = (hitDirection * currentHitPower) + (Vector3.up * currentUpwardPower);
 
         // 力を加えてオブジェクトを吹っ飛ばす
         rb.AddForce(finalForce, ForceMode.Impulse);
 
         // 打たれたオブジェクトにランダムな回転を与える
-        Vector3 randomtorque = new Vector3(UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f)) * 50f;
+        float torqueMultiplier = isChargeHit ? 80f : 50f;
+        Vector3 randomtorque = new Vector3(UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f), UnityEngine.Random.Range(-10f, 10f)) * torqueMultiplier;
         rb.AddTorque(randomtorque, ForceMode.Impulse);
 
-        // スコア加算する
         if(GameScore.Instance != null)
         {
-            GameScore.Instance.AddScore(hitScore);
+            GameScore.Instance.AddScore(currentScore);
         }
 
         Debug.Log(collision.gameObject.name + "を打ち飛ばしました！");

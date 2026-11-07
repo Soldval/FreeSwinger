@@ -1984,7 +1984,13 @@ MonoBehaviour:
   seCountDown: {fileID: 8300000, guid: f2fda993ee8dcca4e87463956434b48e, type: 3}
   seGameStart: {fileID: 8300000, guid: 4c75cd44dcf37ab4fab9d85950a9ed0a, type: 3}
   seTimeUp: {fileID: 8300000, guid: 3e2db0eb71990054e988cdcc5f34eac3, type: 3}
+  seCharge: {fileID: 8300000, guid: f44a707291aa60c448f6e1ffe2e4c6cd, type: 3}
+  seMaxCharge: {fileID: 8300000, guid: 7ccb4db4cef7563499dc7e56d3522f8b, type: 3}
   seLeftSwing: {fileID: 8300000, guid: 9ebaee24d7732ed4090166d3aeebd620, type: 3}
+  seChargeLeftSwing: {fileID: 8300000, guid: 1a2ed1eefea1c3e459c1bca30df37965, type: 3}
+  seBatHit: {fileID: 8300000, guid: 5aa84964124aa7c40abcbb4d0b5e9e4c, type: 3}
+  seExplosion: {fileID: 8300000, guid: b790b7ab47404ab4891eacebf978fbdf, type: 3}
+  seChainBreak: {fileID: 8300000, guid: a0fd7ddc4bc481d458ac043890d0cfe1, type: 3}
   seCountUp: {fileID: 8300000, guid: 2779fcb54a4946148b7c902f85ddaaaa, type: 3}
   seHighGrade: {fileID: 8300000, guid: 7c1d3ec6883aef64286e0a8d5d92347a, type: 3}
   seMiddleGrade: {fileID: 8300000, guid: 7de5bc5679a918b4a906ea75c95728e0, type: 3}
@@ -7005,7 +7011,7 @@ MonoBehaviour:
     xOffset: 0
     yOffset: 0
   - gradeType: 2
-    xOffset: 0
+    xOffset: 65
     yOffset: 0
   - gradeType: 3
     xOffset: -110
@@ -7022,7 +7028,7 @@ MonoBehaviour:
   - gradeType: 1
     imageSprite: {fileID: 21300000, guid: 52d7dffa9263f84489c4b2e3c214900e, type: 3}
   - gradeType: 2
-    imageSprite: {fileID: 21300000, guid: aebe00387e7bb8748b02c1d27b787268, type: 3}
+    imageSprite: {fileID: 21300000, guid: b54c9a870c4cd01428cad9012cf5c8d8, type: 3}
   - gradeType: 3
     imageSprite: {fileID: 21300000, guid: b92be7111665b2945aa8c8cc0b9646b5, type: 3}
   - gradeType: 4

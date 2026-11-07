@@ -17,10 +17,9 @@ public static class UIUtils
     {
         if (target == null || EventSystem.current == null) return null;
 
-        EventSystem.current.SetSelectedGameObject(null);  // 現在の選択オブジェクトを空にする
-        EventSystem.current.SetSelectedGameObject(target);  // 選んだオブジェクトをフォーカスにする
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(target);
 
-        // 選択状態にしたオブジェクトを返す
         return target;
     }
 
@@ -32,7 +31,6 @@ public static class UIUtils
     {
         if (EventSystem.current == null) return;
         
-        // 現在フォーカスになっているボタンを取得する
         GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
 
         // 現在選択中が無いもしくは前回選択と同じ場合は処理を終了する
@@ -44,7 +42,6 @@ public static class UIUtils
             AudioManager.PlaySEMove();
         }
 
-        // 現在の選択ボタンを記憶させる
         lastSelected = currentSelected;
     }
 }
