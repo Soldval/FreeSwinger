@@ -177,6 +177,7 @@ public class EffectController : MonoBehaviour
         if(meshRenderer != null)
         {
             meshRenderer.material = isCharged ? chargeMaterial : normalMaterial;
+            BuildMesh();
         }
     }
 
@@ -187,6 +188,8 @@ public class EffectController : MonoBehaviour
     {
         // ---- メッシュ生成のためのメモリ確保
         int count = topHistory.Count;  // 履歴の数
+        if (count < 2) return;
+
         Vector3[] vertices = new Vector3[count * 4];  // 3Dの頂点配列(上側、下側、上側厚み、下側厚み)
         Vector2[] uv = new Vector2[count * 4];  // UV座標配列(頂点数と一致させる)
         int[] triangles = new int[(count - 1) * 24];  // 1つの頂点につき6個のインデックスが必要

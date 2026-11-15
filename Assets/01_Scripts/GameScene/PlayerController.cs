@@ -2,7 +2,9 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using StarterAssets;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// プレイヤー操作に関係するクラス
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour
     private Coroutine autoEndSwingCoroutine;
     private float lockedGroundY;
     private bool canControl = true;
+    private bool isLeftHandReleased = false;
 
     void Start()
     {
@@ -92,11 +95,6 @@ public class PlayerController : MonoBehaviour
         // プレイヤー操作可能/不可能を確認
         if (!canControl) return;
 
-        // Spaceキー押し始めたらチャージ状態に入る
-        if(Input.GetKeyDown(KeyCode.Space) && !isSwinging && !isCharging)
-        {
-            StartCharge();
-        }
         if(isCharging)
         {
             chargeTimer += Time.deltaTime;
@@ -106,12 +104,12 @@ public class PlayerController : MonoBehaviour
                 effectController.UpdateChargeProgress(chargeTimer, chargeThreshold);
             }
         }
+    }
 
-        // Spaceキーを離した瞬間にスイング動作を行う
-        if(Input.GetKeyUp(KeyCode.Space) && isCharging)
-        {
-            StartSwing();
-        }
+    private void OnDisable()
+    {
+        // シーン移動時に残っているコルーチンを強制停止させる(エラー防止用)
+        StopAllCoroutines();
     }
 
     #region プレイヤー操作の可能/禁止にする処理 ----
@@ -167,6 +165,24 @@ public class PlayerController : MonoBehaviour
     #region チャージ関係の処理 ----
 
     /// <summary>
+    /// InputSystem
+    /// </summary>
+    /// <param name="context"></param>
+    public void OnCharge(InputAction.CallbackContext context)
+    {
+        if (!canControl) return;
+
+        if(context.started && !isSwinging && !isCharging)
+        {
+            StartCharge();
+        }
+        else if(context.canceled && isCharging)
+        {
+            StartSwing();
+        }
+    }
+
+    /// <summary>
     /// チャージ状態の開始処理
     /// </summary>
     public void StartCharge()
@@ -194,10 +210,10 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsCharging", true);
         }
 
-        // チャージ開始でバットを右手ボーン(チャージポジション)に追従させる
-        if(batAnchorRight != null && chestBone != null)
+        // チャージ開始でバットを胸ボーン(チャージポジション)に追従させる
+        if (batAnchorRight != null && rightHandBone != null)
         {
-            batAnchorRight.SetParent(chestBone, false);
+            batAnchorRight.SetParent(rightHandBone, false);
             batAnchorRight.localPosition = chargeBatPosition;
             batAnchorRight.localRotation = Quaternion.Euler(chargeBatRotation);
         }
@@ -218,6 +234,7 @@ public class PlayerController : MonoBehaviour
     {
         isCharging = false;
         isSwinging = true;
+        isLeftHandReleased = false;
         bool isMaxCharged = (chargeTimer >= chargeThreshold);
 
         // スイング中は移動を止める
@@ -226,25 +243,22 @@ public class PlayerController : MonoBehaviour
             thirdPersonController.enabled = false;
         }
 
-        // スイング中はCharacterControllerも無効化し足の位置を地面に固定する
+        // スイング中はCharacterControllerを無効化し足の位置を地面に固定する
         if(characterController != null)
         {
             characterController.enabled = false;
         }
 
-        // チャージ状態を解除する
         if (animator != null)
         {
             animator.SetBool("IsCharging", false);
         }
 
-        // バットのコライダーをONにする
-        if(batHitController != null)
+       if(batHitController != null)
         {
             batHitController.EnableCollider(isMaxCharged);
         }
         
-        // スイングエフェクト開始処理を呼び出す
         if(effectController != null)
         {
             effectController.StartSwingEffect(isMaxCharged);
@@ -252,7 +266,7 @@ public class PlayerController : MonoBehaviour
 
         // スイング開始時に両手のIKをOFFにする
         DisableRightHandIK();
-        DisableLeftHandIK();
+        EnableLeftHandIK();
 
         // 古いコルーチンが動いていたらスイングを強制停止させる
         if(autoEndSwingCoroutine != null)
@@ -282,8 +296,8 @@ public class PlayerController : MonoBehaviour
 
         isSwinging = false;
         isCharging = false;
+        isLeftHandReleased = false;
 
-        // バットのコライダーをOFFにする
         if(batHitController != null)
         {
             batHitController.DisableCollider();
@@ -296,7 +310,6 @@ public class PlayerController : MonoBehaviour
             autoEndSwingCoroutine = null;
         }
 
-        // 移動速度を通常速度に戻す
         if (thirdPersonController != null)
         {
             thirdPersonController.enabled = true;
@@ -304,13 +317,11 @@ public class PlayerController : MonoBehaviour
             thirdPersonController.SprintSpeed = normalSprintSpeed;
         }
 
-        // CharacterControllerを有効化する
         if(characterController != null)
         {
             characterController.enabled = true;
         }
 
-        // 全てのメッシュ・エフェクトを停止・消去する
         if(effectController != null)
         {
             effectController.StopAllEffects();
@@ -320,7 +331,6 @@ public class PlayerController : MonoBehaviour
         EnableRightHandIK();
         EnableLeftHandIK();
 
-        // バットを初期位置に戻す
         ResetBatTransform();
     }
 
@@ -379,9 +389,11 @@ public class PlayerController : MonoBehaviour
             animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandTarget.rotation);
         }
 
+        bool shouldUseChargeTarget = isCharging || (isSwinging && !isLeftHandReleased);
+
         // ---- チャージ中ならばチャージ用ターゲットを使い、通常時は通常ターゲットを使う。
-        Transform targetHand = (isCharging && chargeLeftHandTarget != null) ? chargeLeftHandTarget : leftHandTarget;
-        Transform targetElbow = (isCharging && chargeLeftElbowHint != null) ? chargeLeftElbowHint : leftElbowHint;
+        Transform targetHand = (shouldUseChargeTarget && chargeLeftHandTarget != null) ? chargeLeftHandTarget : leftHandTarget;
+        Transform targetElbow = (shouldUseChargeTarget && chargeLeftElbowHint != null) ? chargeLeftElbowHint : leftElbowHint;
 
         // ---- 左手のIK処理
         if (targetHand != null)
@@ -449,6 +461,21 @@ public class PlayerController : MonoBehaviour
         {
             batAnchorRight.SetParent(chestBone, true);
         }
+    }
+
+    /// <summary>
+    /// [アニメーションイベント用] スイング途中で左手をバットから離す処理
+    /// </summary>
+    public void ReleaseLeftHand()
+    {
+        isLeftHandReleased = true;
+        DisableLeftHandIK();
+    }
+
+    public void FadeOutLeftHandIK()
+    {
+        isLeftHandReleased = true;
+        LeftIkWeight = 0.0f;
     }
 
     /// <summary>

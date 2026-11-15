@@ -75,6 +75,21 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
-	}
+
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            MoveInput(context.ReadValue<Vector2>());
+        }
+
+        public void OnLook(InputAction.CallbackContext context)
+        {
+            LookInput(context.ReadValue<Vector2>());
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            SprintInput(context.ReadValueAsButton());
+        }
+    }
 	
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5913639024204095378}
   - component: {fileID: 8777073345448608207}
   - component: {fileID: 3670909118876276647}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: MiniMapObjectIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 658927278314020078}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
   m_LocalScale: {x: 1.05, y: 1.05, z: 0.6999999}
   m_ConstrainProportionsScale: 0
   m_Children: []

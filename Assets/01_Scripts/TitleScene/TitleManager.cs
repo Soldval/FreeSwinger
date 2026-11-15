@@ -3,6 +3,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using DG.Tweening;
 
 /// <summary>
@@ -10,9 +11,6 @@ using DG.Tweening;
 /// </summary>
 public class TitleManager : MonoBehaviour
 {
-    [Header("タイトルBGM")]
-    [SerializeField] private AudioClip titleBGM;
-
     [Header("PRESS ANY BUTTON 関連")]
     [SerializeField] private CanvasGroup pressAnyKeyCanvasGroup;
     [SerializeField] private CanvasGroup mainButtonsCanvasGroup;
@@ -24,7 +22,7 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private GameObject titleFirstSelectionButton;
 
     [Header("タイトルシーンのメインボタン群")]
-    [SerializeField] private Selectable[] titleButtons;  // スタートボタン, ランキングボタン, システムボタン
+    [SerializeField] private Selectable[] titleButtons;
 
     [Header("ランキングウィンドウ関連")]
     [SerializeField] private GameObject rankingWindow;
@@ -43,7 +41,7 @@ public class TitleManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.PlayBGM(titleBGM);
+        AudioManager.PlayBGMTitleScene();
 
         // メインボタン群を操作不能＆非表示にしておく
         if(mainButtonsCanvasGroup != null)
@@ -65,18 +63,10 @@ public class TitleManager : MonoBehaviour
 
     void Update()
     {
-        // PRESS ANY BUTTON の入力待ち
-        if(!isKeyPressed)
+        if(isKeyPressed)
         {
-            if(Input.anyKeyDown)
-            {
-                isKeyPressed = true;
-                StartCoroutine(SequencePressAnyKey());
-            }
-            return;
+            UIUtils.HandleselectionChangeSE(ref lastSelectedObject);
         }
-
-        UIUtils.HandleselectionChangeSE(ref lastSelectedObject);
     }
 
     void OnDisable()
@@ -85,6 +75,19 @@ public class TitleManager : MonoBehaviour
     }
 
     #region PRESS ANY BUTTON 処理 ----
+
+    /// <summary>
+    /// InputSystemのPressAnyKeyで呼び出される処理
+    /// </summary>
+    /// <param name="value">入力キー</param>
+    public void OnPressAnyKey(InputValue value)
+    {
+        if(!isKeyPressed && value.isPressed)
+        {
+            isKeyPressed = true;
+            StartCoroutine(SequencePressAnyKey());
+        }
+    }
 
     /// <summary>
     /// PRESS ANY BUTTON 押下後の演出シーケンスを実行する処理(コルーチン)

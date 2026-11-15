@@ -43,6 +43,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip seCheer;  // 歓声効果音
     [SerializeField] private AudioClip seApplause;  // 拍手効果音
 
+    [Header("BGM素材")]
+    [SerializeField] private AudioClip bgmTitleScene;  // タイトルシーンBGM
+    [SerializeField] private AudioClip bgmGameScene;  // ゲームシーンBGM
+
     private void Awake()
     {
         // AudioManagerのインスタンスはシングルトン
@@ -184,7 +188,8 @@ public class AudioManager : MonoBehaviour
     {
         if (instance == null) return;
 
-        instance.PlaySE(instance.seBatHit);
+        // 元々のSE音が小さいため3倍にしている
+        instance.seAudioSource.PlayOneShot(instance.seBatHit, 3.0f);
     }
 
     /// <summary>
@@ -291,10 +296,30 @@ public class AudioManager : MonoBehaviour
     #region BGM処理まとめ ----
 
     /// <summary>
+    /// タイトルシーンBGMを開始する処理
+    /// </summary>
+    public static void PlayBGMTitleScene()
+    {
+        if (instance == null) return;
+
+        instance.PlayBGM(instance.bgmTitleScene);
+    }
+
+    /// <summary>
+    /// ゲームシーンBGMを開始する処理
+    /// </summary>
+    public static void PlayBGMGameScene()
+    {
+        if (instance == null) return;
+
+        instance.PlayBGM(instance.bgmGameScene);
+    }
+
+    /// <summary>
     /// 指定したBGMでループ再生する処理
     /// </summary>
     /// <param name="bgm">再生したいBGMデータ</param>
-    public static void PlayBGM(AudioClip bgm)
+    private void PlayBGM(AudioClip bgm)
     {
         if (instance == null || bgm == null || instance.bgmAudioSource == null) return;
 

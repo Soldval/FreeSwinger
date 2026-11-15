@@ -62,8 +62,8 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 1
-        functionName: AttachBatToChest
+      - time: 0.3303483
+        functionName: ReleaseLeftHand
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -71,6 +71,13 @@ ModelImporter:
         messageOptions: 0
       - time: 1
         functionName: EndSwing
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: AttachBatToChest
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

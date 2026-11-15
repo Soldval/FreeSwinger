@@ -1,6 +1,7 @@
 // GameManager.cs
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -8,9 +9,6 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    [Header("ゲームシーンのBGM")]
-    [SerializeField] private AudioClip gameBGM;
-
     [Header("HUD関連")]
     [SerializeField] private GameObject HUD;  // HUD(タイム, スコア, マップ)
 
@@ -34,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        AudioManager.PlayBGM(gameBGM);
+        AudioManager.PlayBGMGameScene();
         SetHUDActive(true);
         ResumeGame();
     }
@@ -46,29 +44,15 @@ public class GameManager : MonoBehaviour
 
         // ---- デバッグモード時の処理
         // Zキー押下でリザルトシーンに移動する
-        //if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
-        //{
-        //    if(gameTimer != null)
-        //    {
-        //        gameTimer.ForceTimeUp();
-        //    }
-        //    else
-        //    {
-        //        GoToResultScene();
-        //    }
-        //}
-
-        // Escキーが押された場合
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
         {
-            if(isPaused)
+            if (gameTimer != null)
             {
-                ResumeGame();
+                gameTimer.ForceTimeUp();
             }
             else
             {
-                PauseGame();
-                lastSelectedObject = UIUtils.SetFocusWithoutSound(pauseFirstSelectionButton);
+                GoToResultScene();
             }
         }
 
@@ -118,6 +102,22 @@ public class GameManager : MonoBehaviour
 
     #region ポーズ関係の処理 ----
 
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if(context.performed && !isTimeUp)
+        {
+            if(isPaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
+                lastSelectedObject = UIUtils.SetFocusWithoutSound(pauseFirstSelectionButton);
+            }
+        }
+    }
+
     /// <summary>
     /// ポーズ開始処理
     /// </summary>
@@ -155,7 +155,16 @@ public class GameManager : MonoBehaviour
     public void OnRetryButtonPress()
     {
         AudioManager.PlaySESubmit();
+
+        // 遷移直前にプレイヤー入力を無効化する(エラー防止用)
+        PlayerController player = FindAnyObjectByType<PlayerController>();
+        if(player != null)
+        {
+            player.DisableControl();
+        }
+
         Time.timeScale = 1f;
+        isPaused = false;
         SetHUDActive(false);
         SceneBridge.LoadSceneWithLoading("02_GameScene");
     }
@@ -167,7 +176,16 @@ public class GameManager : MonoBehaviour
     public void OnTitleMoveButtonPress()
     {
         AudioManager.PlaySESubmit();
+
+        // 遷移直前にプレイヤー入力を無効化する(エラー防止用)
+        PlayerController player = FindAnyObjectByType<PlayerController>();
+        if (player != null)
+        {
+            player.DisableControl();
+        }
+
         Time.timeScale = 1f;
+        isPaused = false;
         SetHUDActive(false);
         SceneBridge.LoadSceneWithLoading("01_TitleScene");
     }

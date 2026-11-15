@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6123325150043789028}
   - component: {fileID: 3484560012130183142}
   - component: {fileID: 5622204462219872125}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: MiniMapObjectIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,6 +263,8 @@ MonoBehaviour:
   chainBreakEffectPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   explosionRadius: 3
   explosionForce: 10
+  explosionUpwardModifier: 3
+  chainUpwardForce: 5
   explodeScore: 2000
   chainBreakScore: 5000
 --- !u!96 &5269369461416492565
