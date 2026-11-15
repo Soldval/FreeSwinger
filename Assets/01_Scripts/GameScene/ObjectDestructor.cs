@@ -86,10 +86,6 @@ public class ObjectDestructor : MonoBehaviour
                 if (otherDestructor != null)
                 {
                     otherDestructor.BlastChainedObject(true);
-                    if (GameScore.Instance != null)
-                    {
-                        GameScore.Instance.AddScore(chainBreakScore);
-                    }
                 }
             }
             AudioManager.PlaySEExplosion();
@@ -99,6 +95,10 @@ public class ObjectDestructor : MonoBehaviour
             if(chainBreakEffectPrefab != null)
             {
                 Instantiate(chainBreakEffectPrefab, transform.position, Quaternion.identity);
+            }
+            if (GameScore.Instance != null)
+            {
+                GameScore.Instance.AddScore(chainBreakScore);
             }
             AudioManager.PlaySEChainBreak();
         }

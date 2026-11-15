@@ -1881,8 +1881,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1 &35786299
 GameObject:
   m_ObjectHideFlags: 0
@@ -2473,8 +2473,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1 &43716002
 GameObject:
   m_ObjectHideFlags: 0
@@ -4806,8 +4806,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1001 &164715853
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5029,8 +5029,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &164715858
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5286,8 +5286,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &174694015
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5453,8 +5453,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &181698009
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5490,6 +5490,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -99.95
@@ -5689,8 +5693,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &188132503
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12136,7 +12140,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1 &205674232 stripped
 GameObject:
@@ -12276,8 +12280,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &205674236
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12612,7 +12616,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1001 &210170181
 PrefabInstance:
@@ -13077,8 +13081,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &229077963
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18744,6 +18748,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -54.32
@@ -19167,8 +19175,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1 &314929343
 GameObject:
   m_ObjectHideFlags: 0
@@ -19378,7 +19386,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1455546819123007583, guid: 154b5dba822c9d540ae738bd99eff6c7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1705173667}
   m_SourcePrefab: {fileID: 100100000, guid: 154b5dba822c9d540ae738bd99eff6c7, type: 3}
 --- !u!4 &330070540 stripped
 Transform:
@@ -19730,7 +19741,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!4 &340734156 stripped
 Transform:
@@ -19745,6 +19756,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6600934043314191300, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 872970631344902705, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
       propertyPath: m_Name
       value: Composition02
@@ -20419,8 +20434,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &366270134
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -20708,8 +20723,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &378346548
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21306,8 +21321,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &408485559
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21674,8 +21689,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &411366559
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22339,8 +22354,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &416938422
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22954,8 +22969,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &433941143
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22991,6 +23006,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -54.84
@@ -23344,8 +23363,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &455150865
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -23843,8 +23862,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!96 &458560088
 TrailRenderer:
   serializedVersion: 4
@@ -24218,7 +24237,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1 &466070788
 GameObject:
@@ -26073,8 +26092,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &501690920
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -26701,8 +26720,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1 &556318167
 GameObject:
   m_ObjectHideFlags: 0
@@ -31320,7 +31339,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!54 &600807777
 Rigidbody:
@@ -35938,8 +35957,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1001 &626993994
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37314,8 +37333,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!96 &671561919
 TrailRenderer:
   serializedVersion: 4
@@ -38064,6 +38083,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -56.74
@@ -38263,8 +38286,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &717492285
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -38526,8 +38549,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!4 &724198816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8875722071788151068, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
@@ -39691,8 +39714,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &755826559
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -39778,7 +39801,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 19ab087c3c524e04a9846d21ec4bb038, type: 2}
+  - {fileID: 2100000, guid: c98709bd3c1c8564a94c1161c55552b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -39880,8 +39903,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &765918507
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42594,7 +42617,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1001 &786938660
 PrefabInstance:
@@ -42917,8 +42940,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &793117504
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -47599,8 +47622,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &828799399
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -55238,6 +55261,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6600934043314191300, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 872970631344902705, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
       propertyPath: m_Name
       value: Composition09
@@ -55445,8 +55472,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &947844163
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -60079,8 +60106,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &979626176
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -60163,8 +60190,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!96 &980395271
 TrailRenderer:
   serializedVersion: 4
@@ -60191,7 +60218,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 19ab087c3c524e04a9846d21ec4bb038, type: 2}
+  - {fileID: 2100000, guid: c98709bd3c1c8564a94c1161c55552b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -60614,8 +60641,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &995492149
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -61736,6 +61763,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -121.2
@@ -62366,7 +62397,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!4 &1063909256 stripped
 Transform:
@@ -62780,6 +62811,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6600934043314191300, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 872970631344902705, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
       propertyPath: m_Name
       value: Composition01
@@ -63455,8 +63490,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1108186033
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -65446,8 +65481,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1128057576
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -65958,8 +65993,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1145791548
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -71546,6 +71581,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -81.47
@@ -74910,8 +74949,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1001 &1223099430
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74920,6 +74959,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -109.06
@@ -75781,8 +75824,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1235780876
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -77581,6 +77624,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -80.2
@@ -77866,8 +77913,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1250988623
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -79090,8 +79137,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1284924675
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -79466,8 +79513,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1295318561
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -80409,6 +80456,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -140.13
@@ -81797,8 +81848,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1352383114
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -85637,8 +85688,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1424834963
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -85786,6 +85837,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -56.74
@@ -86725,8 +86780,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1452620327
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -89959,8 +90014,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1463375371
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -90331,7 +90386,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!4 &1478965787 stripped
 Transform:
@@ -90812,6 +90867,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -140.13
@@ -91046,7 +91105,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!43 &1501454362
 Mesh:
@@ -92638,8 +92697,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1518260128
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -93458,8 +93517,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1553597395
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -93715,8 +93774,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1001 &1565944913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -93936,8 +93995,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1568684528
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -94226,7 +94285,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 19ab087c3c524e04a9846d21ec4bb038, type: 2}
+  - {fileID: 2100000, guid: c98709bd3c1c8564a94c1161c55552b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -94328,8 +94387,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1582325146
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -94500,8 +94559,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1590426082
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -94845,8 +94904,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1598729504
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -96090,7 +96149,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!54 &1627608901
 Rigidbody:
@@ -96806,6 +96865,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -139.91
@@ -97034,6 +97097,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -99.51
@@ -97241,7 +97308,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!54 &1666124686
 Rigidbody:
@@ -97577,8 +97644,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1678568146
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -97938,8 +98005,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1684923785
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -98132,7 +98199,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1001 &1687213241
 PrefabInstance:
@@ -98372,7 +98439,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1001 &1692706666
 PrefabInstance:
@@ -98382,6 +98449,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6121544221447801694, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2610626625624153268, guid: 55bf6f68f2fea2047ae78db71e94f12f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -139.91
@@ -98451,6 +98522,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6600934043314191300, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 872970631344902705, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
       propertyPath: m_Name
       value: Composition22
@@ -98780,6 +98855,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4070453986225645933, guid: 07c278c649185204ab6ec5d4cbc76e51, type: 3}
   m_PrefabInstance: {fileID: 1703428798}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1705173664 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1455546819123007583, guid: 154b5dba822c9d540ae738bd99eff6c7, type: 3}
+  m_PrefabInstance: {fileID: 330070539}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1705173667
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705173664}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5480386140492397982, guid: 04d8fef0c1021794ab1fae1f59fda2ad, type: 3}
 --- !u!1 &1708286246
 GameObject:
   m_ObjectHideFlags: 0
@@ -99115,8 +99217,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1721007934
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -100362,6 +100464,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6600934043314191300, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 872970631344902705, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
       propertyPath: m_Name
       value: Composition03
@@ -100774,7 +100880,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!1 &1767417931 stripped
 GameObject:
@@ -102637,7 +102743,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!43 &1785749295
 Mesh:
@@ -103070,8 +103176,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1790369510
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -103237,8 +103343,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1794382062
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -103771,8 +103877,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1846324464
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -105041,6 +105147,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -118.49
@@ -105402,8 +105512,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1885893244
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -108548,8 +108658,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1902331950
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -109436,8 +109546,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1944795354
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -111154,8 +111264,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1966918171
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -111580,8 +111690,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &1996072708
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -112109,6 +112219,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6824729597541305802, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -89.21
@@ -112354,8 +112468,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &2017928038
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -113962,8 +114076,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1001 &2029810464
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115259,8 +115373,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!1 &2047983481 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4314365748656343295, guid: 97a291d9fce306d4cbf47cb0109c1e41, type: 3}
@@ -115421,8 +115535,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &2047983486
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -115547,6 +115661,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1356377993}
     m_Modifications:
+    - target: {fileID: -6600934043314191300, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
+      propertyPath: explodeScore
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 872970631344902705, guid: 400b95143e198ca41bd964c74765ff09, type: 3}
       propertyPath: m_Name
       value: Composition04
@@ -115917,8 +116035,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &2074339991
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -117453,8 +117571,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!96 &2100709297
 TrailRenderer:
   serializedVersion: 4
@@ -118484,8 +118602,8 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 10
-  explodeScore: 2000
-  chainBreakScore: 5000
+  explodeScore: 1000
+  chainBreakScore: 4000
 --- !u!54 &2142409627
 Rigidbody:
   m_ObjectHideFlags: 0

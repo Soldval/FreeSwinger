@@ -44,17 +44,17 @@ public class GameManager : MonoBehaviour
 
         // ---- デバッグモード時の処理
         // Zキー押下でリザルトシーンに移動する
-        if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
-        {
-            if (gameTimer != null)
-            {
-                gameTimer.ForceTimeUp();
-            }
-            else
-            {
-                GoToResultScene();
-            }
-        }
+        //if (isDebugMode && Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    if (gameTimer != null)
+        //    {
+        //        gameTimer.ForceTimeUp();
+        //    }
+        //    else
+        //    {
+        //        GoToResultScene();
+        //    }
+        //}
 
         if(isPaused)
         {
@@ -102,6 +102,10 @@ public class GameManager : MonoBehaviour
 
     #region ポーズ関係の処理 ----
 
+    /// <summary>
+    /// InputSystemのPauseで呼び出される処理(InvokeUnityEvents)
+    /// </summary>
+    /// <param name="context">入力状況</param>
     public void OnPause(InputAction.CallbackContext context)
     {
         if(context.performed && !isTimeUp)

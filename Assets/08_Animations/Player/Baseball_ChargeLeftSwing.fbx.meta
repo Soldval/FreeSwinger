@@ -62,6 +62,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.081457645
+        functionName: EnableColliderByAnimation
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.3303483
         functionName: ReleaseLeftHand
         data: 
@@ -77,7 +84,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 1
-        functionName: AttachBatToChest
+        functionName: EnableColliderByAnimation
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

@@ -165,9 +165,9 @@ public class PlayerController : MonoBehaviour
     #region チャージ関係の処理 ----
 
     /// <summary>
-    /// InputSystem
+    /// InputSystemのChargeで呼び出される処理(InvokeUnityEvents)
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="context">入力状況</param>
     public void OnCharge(InputAction.CallbackContext context)
     {
         if (!canControl) return;
@@ -254,10 +254,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsCharging", false);
         }
 
-       if(batHitController != null)
-        {
-            batHitController.EnableCollider(isMaxCharged);
-        }
+        // バットコライダーONは少し遅らせるためアニメーションのイベントでONにさせる
+       //if(batHitController != null)
+       // {
+       //     batHitController.EnableCollider(isMaxCharged);
+       // }
         
         if(effectController != null)
         {
@@ -438,6 +439,19 @@ public class PlayerController : MonoBehaviour
         if(animator != null)
         {
             animator.SetBool("IsCharging", false);
+        }
+    }
+
+    /// <summary>
+    /// [アニメーションイベント用] バットコライダーを有効化する処理
+    /// </summary>
+    public void EnableColliderByAnimation()
+    {
+        bool isMaxCharged = (chargeTimer >= chargeThreshold);
+        if (batHitController != null)
+        {
+            batHitController.EnableCollider(isMaxCharged);
+            Debug.Log("【アニメーションイベント】コライダーをONにしました (最大チャージ: " + isMaxCharged + ")");
         }
     }
 

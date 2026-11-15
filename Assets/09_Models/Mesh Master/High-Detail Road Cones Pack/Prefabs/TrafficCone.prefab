@@ -265,7 +265,7 @@ MonoBehaviour:
   explosionForce: 10
   explosionUpwardModifier: 3
   chainUpwardForce: 5
-  explodeScore: 2000
+  explodeScore: 1000
   chainBreakScore: 4000
 --- !u!96 &-6995624261900699424
 TrailRenderer:
