@@ -26,6 +26,9 @@ FreeSwingerとは、どんな球でも豪快にスイングしてしまう打者
 | **カメラ操作** |`マウス移動`|`右スティック`|
 | **ポーズ** |`Escキー`|`⊖ボタン`(Selectボタン)|
 
+![キーボード操作](./Documents/キーボード操作.png)
+![ゲームパッド操作](./Documents/ゲームパッド操作.png)
+
 ## 🤖 プレイ方法
 ビルド済みの実行ファイルは以下からダウンロード可能です。
 ※Windows環境でプレイ可能です
@@ -47,6 +50,7 @@ FreeSwingerとは、どんな球でも豪快にスイングしてしまう打者
 * [FreeSwinger 企画書はこちら（PDF）](./Documents/FreeSwinger_企画書.pdf)
 * [FreeSwinger 構想資料はこちら（PDF）](./Documents/FreeSwinger_構想資料_PDF.pdf)
 * [FreeSwinger 構想資料はこちら（Excel ダウンロード）](./Documents/FreeSwinger_構想資料.xlsx)
+* [FreeSwinger スクリプト簡易説明表はこちら（PDF）](./Documents/FreeSwinger_スクリプト簡易説明表.pdf)
 
 ## 📜 制作意図
 ### 1. コンセプトとコア体験
