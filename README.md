@@ -12,7 +12,13 @@ FreeSwingerとは、どんな球でも豪快にスイングしてしまう打者
 転じてこのゲームではとにかく何にでもスイングするという意味でこのタイトル名にしました。
 
 ## 📽️ ゲーム概要
-[[動画などを入れる]]
+
+https://github.com/Soldval/FreeSwinger/raw/main/Documents/FreeSwinger_紹介動画.mp4
+
+
+https://github.com/user-attachments/assets/1dbd341d-7c0b-4eda-bf08-3d0aad943ef4
+
+
 
 ## 🎮 操作方法  
 本ゲーム操作は「キーボード」または「ゲームパッド(Nintendo Switch Proコントローラー等)」両方に対応しています。
@@ -51,6 +57,7 @@ FreeSwingerとは、どんな球でも豪快にスイングしてしまう打者
 * [FreeSwinger 構想資料はこちら（PDF）](./Documents/FreeSwinger_構想資料_PDF.pdf)
 * [FreeSwinger 構想資料はこちら（Excel ダウンロード）](./Documents/FreeSwinger_構想資料.xlsx)
 * [FreeSwinger スクリプト簡易説明表はこちら（PDF）](./Documents/FreeSwinger_スクリプト簡易説明表.pdf)
+* ※スクリプトは「Assets/01_Scripts」内にまとめてあります。
 
 ## 📜 制作意図
 ### 1. コンセプトとコア体験
