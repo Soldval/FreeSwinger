@@ -436,6 +436,8 @@ public class PlayerController : MonoBehaviour
         batAnchorRight.localPosition = initialAnchorPosition;
         batAnchorRight.localRotation = initialAnchorRotation;
 
+        EnableRightHandIK();
+
         if(animator != null)
         {
             animator.SetBool("IsCharging", false);

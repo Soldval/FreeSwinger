@@ -374,13 +374,14 @@ namespace StarterAssets
 
         private void OnFootstep(AnimationEvent animationEvent)
         {
-            if (animationEvent.animatorClipInfo.weight > 0.5f)
+            if (animationEvent.animatorClipInfo.weight > 0.1f)
             {
-
-                if (AudioFootsteps != null)
-                    AudioFootsteps.Play();
-                if (AudioFoley != null)
-                    AudioFoley.Play();
+                if (FootstepAudioClips != null && FootstepAudioClips.Length > 0 && AudioFootsteps != null)
+                {
+                    // 配列からランダムに足音を選んで再生する
+                    int index = Random.Range(0, FootstepAudioClips.Length);
+                    AudioFootsteps.PlayOneShot(FootstepAudioClips[index], FootstepAudioVolume);
+                }
             }
         }
 

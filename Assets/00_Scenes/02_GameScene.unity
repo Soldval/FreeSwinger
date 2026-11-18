@@ -20474,7 +20474,7 @@ GameObject:
   - component: {fileID: 370131451}
   m_Layer: 6
   m_Name: LeftElbowHint
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22141,11 +22141,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8336929100761711049, guid: 219edf419bb0d1b4382b7aba4204b8cd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.7
+      value: -10.02
       objectReference: {fileID: 0}
     - target: {fileID: 8336929100761711049, guid: 219edf419bb0d1b4382b7aba4204b8cd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.490374
+      value: 22.75
       objectReference: {fileID: 0}
     - target: {fileID: 8336929100761711049, guid: 219edf419bb0d1b4382b7aba4204b8cd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -25744,7 +25744,7 @@ GameObject:
   - component: {fileID: 481939492}
   m_Layer: 6
   m_Name: LeftHandTarget
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42345,7 +42345,7 @@ GameObject:
   - component: {fileID: 777343026}
   m_Layer: 6
   m_Name: ChargeLeftHandTarget
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78132,7 +78132,7 @@ GameObject:
   - component: {fileID: 1270480323}
   m_Layer: 8
   m_Name: LeftSwingTrailPointUnder
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78893,7 +78893,7 @@ GameObject:
   - component: {fileID: 1284877543}
   m_Layer: 6
   m_Name: SwingLeftHandTarget
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85530,7 +85530,7 @@ GameObject:
   - component: {fileID: 1423841714}
   m_Layer: 6
   m_Name: ChargeLeftElbowHint
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86361,7 +86361,7 @@ GameObject:
   - component: {fileID: 1450110340}
   m_Layer: 6
   m_Name: BatChargeLeftSwingCollider
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86400,10 +86400,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.0806992
-  m_Height: 1.3182955
+  m_Radius: 0.15028799
+  m_Height: 1.3182954
   m_Direction: 1
-  m_Center: {x: 0.026865778, y: 0.6533566, z: 0.0067771035}
+  m_Center: {x: 0.09855314, y: 0.6520109, z: 0.008125131}
 --- !u!1 &1452190482
 GameObject:
   m_ObjectHideFlags: 0
@@ -86571,7 +86571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8336929100761711049, guid: 219edf419bb0d1b4382b7aba4204b8cd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.490374
+      value: 22.64
       objectReference: {fileID: 0}
     - target: {fileID: 8336929100761711049, guid: 219edf419bb0d1b4382b7aba4204b8cd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -105552,7 +105552,7 @@ GameObject:
   - component: {fileID: 1891880670}
   m_Layer: 6
   m_Name: RightHandTarget
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105565,8 +105565,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891880669}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.58205324, y: -0.3386386, z: 0.051548317, w: 0.73748267}
-  m_LocalPosition: {x: -0.97, y: -0.158, z: -0.322}
+  m_LocalRotation: {x: -0.58205324, y: -0.33863848, z: 0.05154833, w: 0.73748267}
+  m_LocalPosition: {x: -0.97000086, y: -0.15800083, z: -0.3220008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -111078,7 +111078,7 @@ GameObject:
   - component: {fileID: 1960289641}
   m_Layer: 6
   m_Name: BatLeftSwingCollider
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111091,13 +111091,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1960289639}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.092270404, y: 0.17226097, z: 0.2290474, w: 0.95359826}
+  m_LocalRotation: {x: 0.057352234, y: 0.11834348, z: 0.1604614, w: 0.9782421}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1448846685144583630}
-  m_LocalEulerAnglesHint: {x: 5.57, y: 21.874, z: 28.09}
+  m_LocalEulerAnglesHint: {x: 4.257, y: 14.515, z: 19.173}
 --- !u!136 &1960289641
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -111117,10 +111117,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.054703783
+  m_Radius: 0.114249356
   m_Height: 1.1313714
   m_Direction: 1
-  m_Center: {x: 0.014032783, y: 0.56007534, z: 0.018778374}
+  m_Center: {x: 0.07565388, y: 0.55944574, z: 0.01931901}
 --- !u!4 &1966287950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 323057892683906611, guid: c1620d9faffa7524eb0919e5c0e7718f, type: 3}
@@ -114304,7 +114304,7 @@ GameObject:
   - component: {fileID: 2041241503}
   m_Layer: 8
   m_Name: LeftSwingTrailPointTop
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121897,7 +121897,7 @@ GameObject:
   - component: {fileID: 5835580954854181143}
   m_Layer: 6
   m_Name: BaseBall_Bat_LOD_0
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122610,8 +122610,8 @@ MonoBehaviour:
   AudioFoley: {fileID: 0}
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
   FootstepAudioClips:
-  - {fileID: 8300000, guid: 29841e7d5bbfb5b419c9ad16ca8bc4c1, type: 3}
-  FootstepAudioVolume: 1
+  - {fileID: 8300000, guid: 274649b0e221539409070ebf6c18918b, type: 3}
+  FootstepAudioVolume: 0.8
   JumpHeight: 0
   Gravity: -15
   JumpTimeout: 0.3
@@ -126871,7 +126871,7 @@ GameObject:
   - component: {fileID: 7481809246459748605}
   m_Layer: 6
   m_Name: bat
-  m_TagString: Untagged
+  m_TagString: Bat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
